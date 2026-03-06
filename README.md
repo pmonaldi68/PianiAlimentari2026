@@ -1,6 +1,6 @@
 # PianiAlimentari2026
 
-Web app semplice per consultare i piani alimentari 2026.
+Web app per consultare i piani alimentari 2026 in modo semplice, moderno e leggibile.
 
 ## Avvio locale
 
@@ -11,6 +11,12 @@ python3 -m http.server 8000
 ```
 
 Poi apri `http://localhost:8000`.
+
+## Funzionalità UI
+
+- Interfaccia responsive (desktop, tablet, mobile).
+- Layout a card dei pasti giornalieri con informazioni paziente.
+- Modalità notte/giorno con toggle manuale e salvataggio preferenza.
 
 ## Dati
 

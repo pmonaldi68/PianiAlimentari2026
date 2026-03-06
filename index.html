@@ -3,32 +3,225 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>Piani Alimentari 2026</title>
     <style>
-      body { font-family: Arial, sans-serif; margin: 24px; background:#f7f7fb; color:#222; }
-      .card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,.08); max-width:1000px; margin:auto; }
-      h1 { margin-top:0; }
-      .controls { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
-      select { padding:8px; border-radius:8px; border:1px solid #ccc; }
-      .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px; }
-      .meal { border:1px solid #e6e6ee; border-radius:10px; padding:10px; background:#fafaff; }
-      .meal h3 { margin:0 0 6px; font-size:1rem; }
-      ul { margin:0; padding-left:18px; }
-      .meta { color:#555; margin-bottom:16px; }
-      .error { color:#b00020; font-weight:bold; }
+      :root {
+        --bg: #f3f6fb;
+        --surface: #ffffff;
+        --surface-2: #f8faff;
+        --text: #1f2937;
+        --muted: #5b6472;
+        --border: #e5eaf3;
+        --primary: #3b82f6;
+        --primary-2: #1d4ed8;
+        --danger: #b00020;
+        --shadow: 0 12px 32px rgba(21, 31, 54, 0.12);
+      }
+
+      [data-theme='dark'] {
+        --bg: #0e1117;
+        --surface: #171c26;
+        --surface-2: #1c2330;
+        --text: #e8ecf3;
+        --muted: #a9b3c4;
+        --border: #2b3444;
+        --primary: #60a5fa;
+        --primary-2: #93c5fd;
+        --danger: #ff7a7a;
+        --shadow: 0 16px 38px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at top left, #dbeafe 0%, var(--bg) 35%);
+        min-height: 100vh;
+      }
+
+      [data-theme='dark'] body {
+        background: radial-gradient(circle at top left, #1d2533 0%, var(--bg) 35%);
+      }
+
+      .container {
+        width: min(1100px, 100% - 2rem);
+        margin: 2rem auto;
+      }
+
+      .shell {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: clamp(1rem, 2vw, 1.5rem);
+        box-shadow: var(--shadow);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.3rem, 3vw, 1.9rem);
+      }
+
+      .subtitle {
+        margin: .35rem 0 0;
+        color: var(--muted);
+        font-size: .95rem;
+      }
+
+      .theme-toggle {
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        color: var(--text);
+        border-radius: 999px;
+        padding: .55rem .9rem;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: .8rem;
+        margin: 1rem 0;
+      }
+
+      .control {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: .6rem .7rem;
+      }
+
+      .control label {
+        display: block;
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .35rem;
+      }
+
+      select {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: .55rem;
+        background: var(--surface);
+        color: var(--text);
+      }
+
+      .meta {
+        margin: .2rem 0 1rem;
+        color: var(--muted);
+      }
+
+      .error {
+        border: 1px solid color-mix(in oklab, var(--danger) 35%, transparent);
+        background: color-mix(in oklab, var(--danger) 12%, var(--surface));
+        color: var(--danger);
+        border-radius: 10px;
+        padding: .65rem .75rem;
+        margin-bottom: .8rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: .8rem;
+      }
+
+      .meal {
+        grid-column: span 6;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        border-radius: 14px;
+        padding: .9rem;
+      }
+
+      .meal.condimenti {
+        grid-column: span 12;
+      }
+
+      .meal h3 {
+        margin: 0 0 .55rem;
+        color: var(--primary-2);
+      }
+
+      .meal ul {
+        margin: 0;
+        padding-left: 1.1rem;
+      }
+
+      .meal li { margin: .32rem 0; }
+
+      .chip {
+        display: inline-block;
+        background: color-mix(in oklab, var(--primary) 18%, var(--surface));
+        color: var(--primary-2);
+        border: 1px solid color-mix(in oklab, var(--primary) 35%, var(--border));
+        border-radius: 999px;
+        padding: .25rem .65rem;
+        font-size: .78rem;
+        margin-bottom: .6rem;
+      }
+
+      @media (max-width: 900px) {
+        .controls { grid-template-columns: 1fr 1fr; }
+        .controls .control:last-child { grid-column: span 2; }
+      }
+
+      @media (max-width: 640px) {
+        .container { width: calc(100% - 1rem); margin: 1rem auto; }
+        .shell { border-radius: 14px; }
+        .controls { grid-template-columns: 1fr; }
+        .controls .control:last-child { grid-column: auto; }
+        .meal, .meal.condimenti { grid-column: span 12; }
+        .theme-toggle { width: 100%; }
+      }
     </style>
   </head>
   <body>
-    <div class="card">
-      <h1>Piani Alimentari 2026</h1>
-      <p class="meta" id="patientMeta">Caricamento dati...</p>
-      <div class="controls">
-        <label>Paziente: <select id="patientSelect"></select></label>
-        <label>Giorno: <select id="daySelect"></select></label>
-      </div>
-      <div id="error" class="error" hidden></div>
-      <div class="grid" id="meals"></div>
-    </div>
+    <main class="container">
+      <section class="shell">
+        <div class="topbar">
+          <div>
+            <h1>Piani Alimentari 2026</h1>
+            <p class="subtitle">Interfaccia consultazione piani giornalieri</p>
+          </div>
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambia tema">🌙 Modalità notte</button>
+        </div>
+
+        <div class="controls">
+          <div class="control">
+            <label for="patientSelect">Paziente</label>
+            <select id="patientSelect"></select>
+          </div>
+          <div class="control">
+            <label for="daySelect">Giorno</label>
+            <select id="daySelect"></select>
+          </div>
+          <div class="control">
+            <label>Sezione</label>
+            <span class="chip" id="dayChip">Giorno selezionato</span>
+          </div>
+        </div>
+
+        <p id="patientMeta" class="meta">Caricamento dati...</p>
+        <div id="error" class="error" hidden></div>
+        <div class="grid" id="meals"></div>
+      </section>
+    </main>
 
     <script src="app.js"></script>
   </body>

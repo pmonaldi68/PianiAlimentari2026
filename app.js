@@ -3,8 +3,34 @@ const daySelect = document.getElementById('daySelect');
 const mealsContainer = document.getElementById('meals');
 const patientMeta = document.getElementById('patientMeta');
 const errorBox = document.getElementById('error');
+const dayChip = document.getElementById('dayChip');
+const themeToggle = document.getElementById('themeToggle');
 
 let plans = [];
+
+const THEME_KEY = 'piani-theme';
+
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(THEME_KEY, theme);
+  themeToggle.textContent = theme === 'dark' ? '☀️ Modalità giorno' : '🌙 Modalità notte';
+}
+
+function initTheme() {
+  const storedTheme = localStorage.getItem(THEME_KEY);
+  if (storedTheme === 'dark' || storedTheme === 'light') {
+    setTheme(storedTheme);
+    return;
+  }
+
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  setTheme(prefersDark ? 'dark' : 'light');
+}
+
+themeToggle.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  setTheme(current === 'dark' ? 'light' : 'dark');
+});
 
 function showError(message) {
   errorBox.textContent = message;
@@ -14,6 +40,18 @@ function showError(message) {
 function clearError() {
   errorBox.hidden = true;
   errorBox.textContent = '';
+}
+
+function mealSection(title, items, extraClass = '') {
+  const section = document.createElement('section');
+  section.className = `meal ${extraClass}`.trim();
+  section.innerHTML = `
+    <h3>${title}</h3>
+    <ul>
+      ${items.length ? items.map((i) => `<li>${i.alimento}: <strong>${i.quantita}</strong></li>`).join('') : '<li>Nessun dato disponibile</li>'}
+    </ul>
+  `;
+  return section;
 }
 
 function renderDay() {
@@ -35,6 +73,7 @@ function renderDay() {
 
   const { paziente } = selected;
   patientMeta.textContent = `${paziente.nome} · ${paziente.indirizzo} · ${paziente.medico} · Visita: ${paziente.data_visita}`;
+  dayChip.textContent = `Giorno ${dayPlan.giorno}`;
 
   mealsContainer.innerHTML = '';
   const sections = [
@@ -46,20 +85,17 @@ function renderDay() {
   ];
 
   sections.forEach(([key, label]) => {
-    const box = document.createElement('section');
-    box.className = 'meal';
-    const items = dayPlan.pasti[key] || [];
-    box.innerHTML = `<h3>${label}</h3><ul>${items.map((i) => `<li>${i.alimento}: ${i.quantita}</li>`).join('')}</ul>`;
-    mealsContainer.appendChild(box);
+    mealsContainer.appendChild(mealSection(label, dayPlan.pasti[key] || []));
   });
 
-  const condimenti = document.createElement('section');
-  condimenti.className = 'meal';
-  const condimentiList = Object.entries(dayPlan.condimenti || {})
-    .map(([k, v]) => `<li>${k}: ${v}</li>`)
+  const condimentiItems = Object.entries(dayPlan.condimenti || {}).map(([alimento, quantita]) => ({ alimento, quantita }));
+  mealsContainer.appendChild(mealSection('Condimenti', condimentiItems, 'condimenti'));
+}
+
+function fillDays(programma) {
+  daySelect.innerHTML = programma
+    .map((day) => `<option value="${day.giorno}">Giorno ${day.giorno}</option>`)
     .join('');
-  condimenti.innerHTML = `<h3>Condimenti</h3><ul>${condimentiList}</ul>`;
-  mealsContainer.appendChild(condimenti);
 }
 
 function initSelectors() {
@@ -67,16 +103,11 @@ function initSelectors() {
     .map((plan, idx) => `<option value="${idx}">${plan.paziente.nome}</option>`)
     .join('');
 
-  daySelect.innerHTML = plans[0].programma
-    .map((day) => `<option value="${day.giorno}">Giorno ${day.giorno}</option>`)
-    .join('');
+  fillDays(plans[0].programma);
 
   patientSelect.addEventListener('change', () => {
     const patientIndex = Number(patientSelect.value);
-    const program = plans[patientIndex]?.programma || [];
-    daySelect.innerHTML = program
-      .map((day) => `<option value="${day.giorno}">Giorno ${day.giorno}</option>`)
-      .join('');
+    fillDays(plans[patientIndex]?.programma || []);
     renderDay();
   });
 
@@ -96,9 +127,11 @@ fetch('data/piani_alimentari.json')
     if (!Array.isArray(plans) || plans.length === 0) {
       throw new Error('Nessun piano alimentare disponibile.');
     }
+    initTheme();
     initSelectors();
   })
   .catch((err) => {
     patientMeta.textContent = 'Impossibile caricare i dati dei piani.';
     showError(err.message);
+    initTheme();
   });
