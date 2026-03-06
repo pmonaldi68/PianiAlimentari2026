@@ -5,15 +5,20 @@ const patientMeta = document.getElementById('patientMeta');
 const errorBox = document.getElementById('error');
 const dayChip = document.getElementById('dayChip');
 const themeToggle = document.getElementById('themeToggle');
+const quickPatients = document.getElementById('quickPatients');
+const mobilePatients = document.getElementById('mobilePatients');
+const mobileDays = document.getElementById('mobileDays');
 
 let plans = [];
+let selectedPatientIndex = 0;
+let selectedDay = 1;
 
 const THEME_KEY = 'piani-theme';
 
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem(THEME_KEY, theme);
   themeToggle.textContent = theme === 'dark' ? '☀️ Modalità giorno' : '🌙 Modalità notte';
+  localStorage.setItem(THEME_KEY, theme);
 }
 
 function initTheme() {
@@ -54,18 +59,67 @@ function mealSection(title, items, extraClass = '') {
   return section;
 }
 
+function renderQuickPatients() {
+  quickPatients.innerHTML = plans
+    .map((plan, idx) => `<button type="button" class="pill ${idx === selectedPatientIndex ? 'active' : ''}" data-patient="${idx}">${plan.paziente.nome}</button>`)
+    .join('');
+
+  quickPatients.querySelectorAll('[data-patient]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectPatient(Number(btn.dataset.patient));
+    });
+  });
+}
+
+function renderMobilePatients() {
+  mobilePatients.innerHTML = plans
+    .map((plan, idx) => `<button type="button" class="mobile-btn ${idx === selectedPatientIndex ? 'active' : ''}" data-mobile-patient="${idx}">${plan.paziente.nome}</button>`)
+    .join('');
+
+  mobilePatients.querySelectorAll('[data-mobile-patient]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectPatient(Number(btn.dataset.mobilePatient));
+    });
+  });
+}
+
+function renderMobileDays(programma) {
+  mobileDays.innerHTML = programma
+    .map((day) => `<button type="button" class="mobile-btn ${day.giorno === selectedDay ? 'active' : ''}" data-mobile-day="${day.giorno}">Giorno ${day.giorno}</button>`)
+    .join('');
+
+  mobileDays.querySelectorAll('[data-mobile-day]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectDay(Number(btn.dataset.mobileDay));
+    });
+  });
+}
+
+function fillDays(programma) {
+  daySelect.innerHTML = programma
+    .map((day) => `<option value="${day.giorno}">Giorno ${day.giorno}</option>`)
+    .join('');
+}
+
+function syncControls(programma) {
+  patientSelect.value = String(selectedPatientIndex);
+  fillDays(programma);
+  daySelect.value = String(selectedDay);
+  renderQuickPatients();
+  renderMobilePatients();
+  renderMobileDays(programma);
+}
+
 function renderDay() {
   clearError();
-  const patientIndex = Number(patientSelect.value);
-  const dayValue = Number(daySelect.value);
-  const selected = plans[patientIndex];
+  const selected = plans[selectedPatientIndex];
 
   if (!selected) {
     showError('Paziente non trovato.');
     return;
   }
 
-  const dayPlan = selected.programma.find((d) => d.giorno === dayValue);
+  const dayPlan = selected.programma.find((d) => d.giorno === selectedDay);
   if (!dayPlan) {
     showError('Giorno non trovato nel programma.');
     return;
@@ -92,28 +146,47 @@ function renderDay() {
   mealsContainer.appendChild(mealSection('Condimenti', condimentiItems, 'condimenti'));
 }
 
-function fillDays(programma) {
-  daySelect.innerHTML = programma
-    .map((day) => `<option value="${day.giorno}">Giorno ${day.giorno}</option>`)
-    .join('');
+function selectPatient(index) {
+  const program = plans[index]?.programma;
+  if (!program || program.length === 0) {
+    showError('Programma paziente non disponibile.');
+    return;
+  }
+
+  selectedPatientIndex = index;
+  selectedDay = program[0].giorno;
+  syncControls(program);
+  renderDay();
 }
 
-function initSelectors() {
+function selectDay(day) {
+  selectedDay = day;
+  const program = plans[selectedPatientIndex]?.programma || [];
+  syncControls(program);
+  renderDay();
+}
+
+function initControls() {
   patientSelect.innerHTML = plans
     .map((plan, idx) => `<option value="${idx}">${plan.paziente.nome}</option>`)
     .join('');
 
-  fillDays(plans[0].programma);
+  const initialProgram = plans[selectedPatientIndex].programma;
+  selectedDay = initialProgram[0].giorno;
+  syncControls(initialProgram);
 
   patientSelect.addEventListener('change', () => {
-    const patientIndex = Number(patientSelect.value);
-    fillDays(plans[patientIndex]?.programma || []);
-    renderDay();
+    selectPatient(Number(patientSelect.value));
   });
 
-  daySelect.addEventListener('change', renderDay);
+  daySelect.addEventListener('change', () => {
+    selectDay(Number(daySelect.value));
+  });
+
   renderDay();
 }
+
+initTheme();
 
 fetch('data/piani_alimentari.json')
   .then((res) => {
@@ -127,11 +200,9 @@ fetch('data/piani_alimentari.json')
     if (!Array.isArray(plans) || plans.length === 0) {
       throw new Error('Nessun piano alimentare disponibile.');
     }
-    initTheme();
-    initSelectors();
+    initControls();
   })
   .catch((err) => {
     patientMeta.textContent = 'Impossibile caricare i dati dei piani.';
     showError(err.message);
-    initTheme();
   });

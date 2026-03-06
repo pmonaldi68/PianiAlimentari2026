@@ -15,8 +15,9 @@ Poi apri `http://localhost:8000`.
 ## Funzionalità UI
 
 - Interfaccia responsive (desktop, tablet, mobile).
-- Layout a card dei pasti giornalieri con informazioni paziente.
-- Modalità notte/giorno con toggle manuale e salvataggio preferenza.
+- Su telefono usa pulsanti (non select a discesa) per scegliere paziente e giorno.
+- Cambio rapido paziente tramite pulsanti "pill" sempre visibili.
+- Modalità notte/giorno con toggle manuale, preferenza sistema e salvataggio su `localStorage`.
 
 ## Dati
 
