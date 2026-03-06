@@ -1,0 +1,332 @@
+{
+  "piani_alimentari": [
+    {
+      "paziente": {
+        "nome": "Daniela Franciosi",
+        "indirizzo": "Via Monte Giove, n.42, 00045 Genzano di Roma",
+        "medico": "Dott.ssa Cristina Mucci",
+        "data_visita": "02/03/2026"
+      },
+      "programma": [
+        {
+          "giorno": 1,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Penne Fredde al Pomodoro Crudo", "quantita": "60g"}, {"alimento": "Insalata di Indivia Belga", "quantita": "100g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "20g"}],
+            "cena": [{"alimento": "Petto di Tacchino ai Ferri", "quantita": "150g"}, {"alimento": "Zucca Gialla", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 2,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Insalatona Pollo e Verdure", "quantita": "200g"}, {"alimento": "Pere", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "20g"}],
+            "cena": [{"alimento": "Farro alle Carote", "quantita": "50g"}, {"alimento": "Zucca Gialla", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 3,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Farro alle Carote", "quantita": "50g"}, {"alimento": "Puntarelle", "quantita": "100g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "20g"}],
+            "cena": [{"alimento": "Cernia al Forno", "quantita": "200g"}, {"alimento": "Cime di Rapa in Padella", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 4,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Frittata", "quantita": "120g"}, {"alimento": "Carote, Finocchi e Indivia", "quantita": "100g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "20g"}],
+            "cena": [{"alimento": "Braciola di Maiale ai Ferri", "quantita": "150g"}, {"alimento": "Broccoli al Vapore", "quantita": "200g"}, {"alimento": "Pere", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g", "parmigiano": "10g"}
+        },
+        {
+          "giorno": 5,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Hamburger di Pollo ai Ferri", "quantita": "150g"}, {"alimento": "Misticanza di Verdure", "quantita": "100g"}, {"alimento": "Mandarini", "quantita": "120g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "20g"}],
+            "cena": [{"alimento": "Pasta e Lenticchie", "quantita": "50g"}, {"alimento": "Cicoria in Padella", "quantita": "180g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 6,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Formaggio Magro a Fiocchi", "quantita": "100g"}, {"alimento": "Finocchi Crudi", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Pizza Margherita", "quantita": "250g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "10g"}
+        },
+        {
+          "giorno": 7,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Gnocchetti Ricotta e Melanzane", "quantita": "180g"}, {"alimento": "Pomodorini Ciliegina", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Prosciutto Crudo Magro", "quantita": "80g"}, {"alimento": "Pane Integrale", "quantita": "30g"}, {"alimento": "Zucca al Forno", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 8,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Insalata di Farro alle Verdure", "quantita": "50g"}, {"alimento": "Insalata Mista di Valerianella", "quantita": "100g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "20g"}],
+            "cena": [{"alimento": "Listarelle di Pollo e Funghi", "quantita": "200g"}, {"alimento": "Melanzane Grigliate", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 9,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Bresaola", "quantita": "100g"}, {"alimento": "Pane Integrale", "quantita": "30g"}, {"alimento": "Valerianella", "quantita": "100g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "20g"}],
+            "cena": [{"alimento": "Minestrone con Riso", "quantita": "150g"}, {"alimento": "Zucca Gialla", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 10,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Formaggio Spalmabile Light", "quantita": "95g"}, {"alimento": "Finocchi Crudi", "quantita": "200g"}, {"alimento": "Pane Integrale", "quantita": "30g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "20g"}],
+            "cena": [{"alimento": "Polpi ai Ferri", "quantita": "200g"}, {"alimento": "Pomodori Grate", "quantita": "200g"}, {"alimento": "Ananas al Naturale", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 11,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Grano con Pomodori", "quantita": "130g"}, {"alimento": "Carote Crude", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "20g"}],
+            "cena": [{"alimento": "Tagliata alle Erbe", "quantita": "150g"}, {"alimento": "Scarola in Padella", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g", "parmigiano": "15g"}
+        },
+        {
+          "giorno": 12,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Salmone Affumicato", "quantita": "80g"}, {"alimento": "Insalata di Indivia Belga", "quantita": "100g"}, {"alimento": "Ananas al Naturale", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "20g"}],
+            "cena": [{"alimento": "Quinoa con i Ceci", "quantita": "50g"}, {"alimento": "Cavolfiore Lessato", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 13,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Hamburger di Manzo ai Ferri", "quantita": "150g"}, {"alimento": "Insalata Mista", "quantita": "100g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Pizza Margherita", "quantita": "250g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "10g"}
+        },
+        {
+          "giorno": 14,
+          "pasti": {
+            "colazione": [{"alimento": "Latte di Soia", "quantita": "150g"}, {"alimento": "Biscotti Integrali", "quantita": "20g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Risotto ai Frutti di Mare", "quantita": "60g"}, {"alimento": "Broccoli al Vapore", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Bresaola", "quantita": "80g"}, {"alimento": "Finocchi Crudi", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        }
+      ]
+    },
+    {
+      "paziente": {
+        "nome": "Paolo Monaldi",
+        "indirizzo": "Via Montegiove 42, 00045 Genzano di Roma",
+        "medico": "Dott.ssa Cristina Mucci",
+        "data_visita": "03/03/2026"
+      },
+      "programma": [
+        {
+          "giorno": 1,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "40g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Penne Fredde al Pomodoro Crudo", "quantita": "70g"}, {"alimento": "Insalata di Indivia Belga", "quantita": "100g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Petto di Tacchino ai Ferri", "quantita": "250g"}, {"alimento": "Carciofi Lessati con Limone", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 2,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Insalatona Pollo e Verdure", "quantita": "200g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Pere", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Zuppa con Riso Integrale", "quantita": "70g"}, {"alimento": "Funghi Champignons", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 3,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "40g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Riso e Piselli", "quantita": "70g"}, {"alimento": "Puntarelle", "quantita": "100g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Cernia al Forno", "quantita": "300g"}, {"alimento": "Cime di Rapa in Padella", "quantita": "200g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 4,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Frittata", "quantita": "120g"}, {"alimento": "Carote, Finocchi e Indivia", "quantita": "150g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Braciola di Maiale ai Ferri", "quantita": "200g"}, {"alimento": "Broccoli al Vapore", "quantita": "200g"}, {"alimento": "Pere", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g", "parmigiano": "10g"}
+        },
+        {
+          "giorno": 5,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "40g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Hamburger di Pollo ai Ferri", "quantita": "200g"}, {"alimento": "Misticanza di Verdure", "quantita": "100g"}, {"alimento": "Mandarini", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Pasta e Lenticchie", "quantita": "60g"}, {"alimento": "Cicoria in Padella", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 6,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Formaggio Magro a Fiocchi", "quantita": "150g"}, {"alimento": "Finocchi Crudi", "quantita": "200g"}, {"alimento": "Pane Integrale", "quantita": "440g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Pizza Margherita", "quantita": "250g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "10g"}
+        },
+        {
+          "giorno": 7,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Gnocchetti Ricotta e Melanzane", "quantita": "200g"}, {"alimento": "Pomodorini Ciliegina", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Radicchio ai Ferri", "quantita": "200g"}, {"alimento": "Prosciutto Crudo Magro", "quantita": "100g"}, {"alimento": "Pane Integrale", "quantita": "25g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 8,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "40g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Insalata di Farro alle Verdure", "quantita": "70g"}, {"alimento": "Insalata Mista di Valerianella", "quantita": "100g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Listarelle di Pollo e Funghi", "quantita": "250g"}, {"alimento": "Melanzane Grigliate", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g"}
+        },
+        {
+          "giorno": 9,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Bresaola", "quantita": "110g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Valerianella", "quantita": "100g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Minestrone con Riso", "quantita": "150g"}, {"alimento": "Broccoli al Vapore", "quantita": "200g"}, {"alimento": "Parmigiano", "quantita": "80g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 10,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "40g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Formaggio Spalmabile Light", "quantita": "130g"}, {"alimento": "Finocchi Crudi", "quantita": "200g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Polpi ai Ferri", "quantita": "250g"}, {"alimento": "Pomodori Grate", "quantita": "200g"}, {"alimento": "Ananas al Naturale", "quantita": "150g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 11,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Pavesini", "quantita": "25g"}],
+            "pranzo": [{"alimento": "Grano con Pomodori", "quantita": "180g"}, {"alimento": "Carote Crude", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Nocciole", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Tagliata alle Erbe", "quantita": "250g"}, {"alimento": "Scarola in Padella", "quantita": "200g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "20g", "parmigiano": "25g"}
+        },
+        {
+          "giorno": 12,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Muesli Croccante Mix Frutta", "quantita": "40g"}],
+            "spuntino_mattina": [{"alimento": "Mele", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Salmone Affumicato", "quantita": "150g"}, {"alimento": "Insalata di Indivia Belga", "quantita": "100g"}, {"alimento": "Ananas al Naturale", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Misto di Frutta Secca", "quantita": "30g"}, {"alimento": "Yogurt P.S. Bianco", "quantita": "125g"}],
+            "cena": [{"alimento": "Insalata di Pollo e Farro", "quantita": "100g"}, {"alimento": "Cavolfiore Lessato", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"} ]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        },
+        {
+          "giorno": 13,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Hamburger di Manzo ai Ferri", "quantita": "200g"}, {"alimento": "Insalata Mista", "quantita": "100g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Pizza Margherita", "quantita": "250g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "10g"}
+        },
+        {
+          "giorno": 14,
+          "pasti": {
+            "colazione": [{"alimento": "The", "quantita": "200g"}, {"alimento": "Biscotti Integrali", "quantita": "30g"}],
+            "spuntino_mattina": [{"alimento": "Mandarini", "quantita": "150g"}],
+            "pranzo": [{"alimento": "Risotto ai Frutti di Mare", "quantita": "70g"}, {"alimento": "Broccoli al Vapore", "quantita": "200g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}],
+            "spuntino_pomeriggio": [{"alimento": "Kiwi", "quantita": "150g"}],
+            "cena": [{"alimento": "Bresaola", "quantita": "110g"}, {"alimento": "Finocchi Crudi", "quantita": "200g"}, {"alimento": "Pane Integrale", "quantita": "40g"}, {"alimento": "Arance", "quantita": "150g"}, {"alimento": "Acqua Oligominerale", "quantita": "400g"}]
+          },
+          "condimenti": {"olio_evo": "15g"}
+        }
+      ]
+    }
+  ]
+}
