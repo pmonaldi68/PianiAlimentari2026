@@ -1,51 +1,65 @@
+const dashboardSection = document.getElementById('dashboardSection');
+const plannerSection = document.getElementById('plannerSection');
+const shoppingSection = document.getElementById('shoppingSection');
+
 const weekButtons = document.getElementById('weekButtons');
 const dayButtons = document.getElementById('dayButtons');
-const mealsContainer = document.getElementById('meals');
+const mealsList = document.getElementById('mealsList');
 const patientMeta = document.getElementById('patientMeta');
-const errorBox = document.getElementById('error');
 const dayChip = document.getElementById('dayChip');
-const themeToggle = document.getElementById('themeToggle');
-const profileToggle = document.getElementById('profileToggle');
-const profileName = document.getElementById('profileName');
-const profileMenu = document.getElementById('profileMenu');
-const shoppingToggle = document.getElementById('shoppingToggle');
-const shoppingSection = document.getElementById('shoppingSection');
 const whatsappShare = document.getElementById('whatsappShare');
+
+const profileToggle = document.getElementById('profileToggle');
+const profileMenu = document.getElementById('profileMenu');
+const profileNameWelcome = document.getElementById('welcomeLine');
+const avatarPrimary = document.getElementById('avatarPrimary');
+const avatarSecondary = document.getElementById('avatarSecondary');
+
+const dashboardMealTitle = document.getElementById('dashboardMealTitle');
+const dashboardMealTime = document.getElementById('dashboardMealTime');
+const progressText = document.getElementById('progressText');
+const progressValue = document.getElementById('progressValue');
+const statDay = document.getElementById('statDay');
+const statProfile = document.getElementById('statProfile');
+
 const shoppingList = document.getElementById('shoppingList');
 const addShoppingBtn = document.getElementById('addShoppingBtn');
+const floatingAdd = document.getElementById('floatingAdd');
 const shoppingForm = document.getElementById('shoppingForm');
 const shopName = document.getElementById('shopName');
 const shopQty = document.getElementById('shopQty');
 const shopCategory = document.getElementById('shopCategory');
 
+const themeToggle = document.getElementById('themeToggle');
+
 let plans = [];
 let selectedPatientIndex = 0;
 let selectedWeek = 1;
 let selectedDay = 1;
+let shoppingFilter = 'all';
 
 const THEME_KEY = 'piani-theme';
 const PROFILE_STATE_KEY = 'piani-profile-state';
 const SHOPPING_KEY = 'piani-shopping-state';
 const SELECTED_PROFILE_KEY = 'piani-selected-profile';
+
 const WEEKDAY_NAMES = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'];
 const PROFILE_COLORS = { 'Paolo Monaldi': '#3b82f6', 'Daniela Franciosi': '#d946ef' };
-const MEAL_ICONS = {
-  colazione: '🥣',
-  spuntino_mattina: '🍏',
-  pranzo: '🍝',
-  spuntino_pomeriggio: '🥜',
-  cena: '🍽️',
-  condimenti: '🫒'
-};
+const MEAL_META = [
+  ['colazione', 'Colazione', '🥣'],
+  ['spuntino_mattina', 'Spuntino Mattina', '🍏'],
+  ['pranzo', 'Pranzo', '🍝'],
+  ['spuntino_pomeriggio', 'Spuntino Pomeriggio', '🥜'],
+  ['cena', 'Cena', '🍽️']
+];
 
 let profileState = {};
 let shoppingState = {};
 
-function dayLabel(dayNumber) {
-  const weekday = WEEKDAY_NAMES[(dayNumber - 1) % 7];
-  return `Giorno ${dayNumber} - ${weekday.charAt(0).toUpperCase() + weekday.slice(1)}`;
+function dayLabel(day) {
+  const weekday = WEEKDAY_NAMES[(day - 1) % 7];
+  return `Giorno ${day} - ${weekday.charAt(0).toUpperCase() + weekday.slice(1)}`;
 }
-
 function foodIcon(name = '') {
   const v = name.toLowerCase();
   if (v.includes('acqua')) return '💧';
@@ -59,118 +73,20 @@ function foodIcon(name = '') {
   return '🍴';
 }
 
-function getCurrentDayPlan() {
-  const selected = plans[selectedPatientIndex];
-  if (!selected) return null;
-  return selected.programma.find((d) => d.giorno === selectedDay) || null;
-}
-
-function shareOnWhatsApp() {
-  const selected = plans[selectedPatientIndex];
-  const dayPlan = getCurrentDayPlan();
-  if (!selected || !dayPlan) return;
-
-  const lines = [];
-  lines.push(`📅 ${dayLabel(dayPlan.giorno)}`);
-  lines.push(`👤 ${selected.paziente.nome}`);
-
-  const sections = [
-    ['colazione', 'Colazione'],
-    ['spuntino_mattina', 'Spuntino mattina'],
-    ['pranzo', 'Pranzo'],
-    ['spuntino_pomeriggio', 'Spuntino pomeriggio'],
-    ['cena', 'Cena']
-  ];
-
-  sections.forEach(([key, label]) => {
-    lines.push(`\n${MEAL_ICONS[key]} ${label}`);
-    (dayPlan.pasti[key] || []).forEach((i) => lines.push(`• ${foodIcon(i.alimento)} ${i.alimento} (${i.quantita})`));
-  });
-
-  const condimenti = Object.entries(dayPlan.condimenti || {});
-  if (condimenti.length) {
-    lines.push(`\n${MEAL_ICONS.condimenti} Condimenti`);
-    condimenti.forEach(([k, v]) => lines.push(`• ${foodIcon(k)} ${k} (${v})`));
-  }
-
-  const msg = encodeURIComponent(lines.join('\n'));
-  window.open(`https://wa.me/?text=${msg}`, '_blank');
-}
-
-function setProfileColor() {
-  const name = plans[selectedPatientIndex]?.paziente?.nome;
-  document.documentElement.style.setProperty('--primary', PROFILE_COLORS[name] || '#3b82f6');
-}
-
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
-  themeToggle.textContent = theme === 'dark' ? '☀️ Modalità giorno' : '🌙 Modalità notte';
+  themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
   localStorage.setItem(THEME_KEY, theme);
 }
-
 function initTheme() {
   const stored = localStorage.getItem(THEME_KEY);
   if (stored === 'dark' || stored === 'light') return setTheme(stored);
   setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 }
-
 themeToggle.addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme') || 'light';
   setTheme(current === 'dark' ? 'light' : 'dark');
 });
-
-shoppingToggle.addEventListener('click', () => {
-  shoppingSection.hidden = !shoppingSection.hidden;
-  shoppingToggle.textContent = shoppingSection.hidden ? '🛒 Lista Spesa' : '🛒 Chiudi Spesa';
-  if (!shoppingSection.hidden) renderShoppingList();
-});
-whatsappShare.addEventListener('click', shareOnWhatsApp);
-
-function showError(message) {
-  errorBox.textContent = message;
-  errorBox.hidden = false;
-}
-function clearError() {
-  errorBox.hidden = true;
-  errorBox.textContent = '';
-}
-
-function parseQty(qty) {
-  const m = String(qty || '').trim().match(/^([0-9]+(?:[.,][0-9]+)?)\s*([a-zA-Z]+)$/);
-  if (!m) return null;
-  return { num: Number(m[1].replace(',', '.')), unit: m[2].toLowerCase() };
-}
-
-function mergeQty(a, b) {
-  const qa = parseQty(a);
-  const qb = parseQty(b);
-  if (qa && qb && qa.unit === qb.unit) return `${(qa.num + qb.num).toFixed(2).replace('.00', '').replace('.', ',')}${qa.unit}`;
-  const parts = [...new Set([a, b].map((x) => String(x).trim()).filter(Boolean))];
-  return parts.join(' + ');
-}
-
-function aggregateItems(items) {
-  const map = new Map();
-  items.forEach((item) => {
-    const key = `${item.nome}`.trim().toLowerCase();
-    if (!map.has(key)) {
-      map.set(key, { ...item, id: crypto.randomUUID(), done: item.done || false });
-      return;
-    }
-    const current = map.get(key);
-    current.quantita = mergeQty(current.quantita, item.quantita);
-    current.categoria = current.categoria || item.categoria;
-    current.done = current.done && item.done;
-  });
-  return [...map.values()];
-}
-
-function mealSection(key, title, items, extraClass = '') {
-  const section = document.createElement('section');
-  section.className = `meal ${extraClass}`.trim();
-  section.innerHTML = `<h3><span class="meal-emoji">${MEAL_ICONS[key] || '🍽️'}</span> ${title}</h3><ul>${items.length ? items.map((i) => `<li>${foodIcon(i.alimento)} ${i.alimento}: <strong>${i.quantita}</strong></li>`).join('') : '<li>Nessun dato disponibile</li>'}</ul>`;
-  return section;
-}
 
 function loadStates() {
   try { profileState = JSON.parse(localStorage.getItem(PROFILE_STATE_KEY) || '{}'); } catch { profileState = {}; }
@@ -178,18 +94,47 @@ function loadStates() {
 }
 
 function saveProfileState() {
-  const profileId = plans[selectedPatientIndex].paziente.nome;
-  profileState[profileId] = { week: selectedWeek, day: selectedDay };
+  const id = plans[selectedPatientIndex].paziente.nome;
+  profileState[id] = { week: selectedWeek, day: selectedDay };
   localStorage.setItem(PROFILE_STATE_KEY, JSON.stringify(profileState));
+  localStorage.setItem(SELECTED_PROFILE_KEY, String(selectedPatientIndex));
+}
+
+function currentWeekdayAsPlanDay() {
+  const jsDay = new Date().getDay();
+  return jsDay === 0 ? 7 : jsDay;
+}
+
+function parseQty(q) {
+  const m = String(q || '').trim().match(/^([0-9]+(?:[.,][0-9]+)?)\s*([a-zA-Z]+)$/);
+  if (!m) return null;
+  return { num: Number(m[1].replace(',', '.')), unit: m[2].toLowerCase() };
+}
+function mergeQty(a, b) {
+  const qa = parseQty(a), qb = parseQty(b);
+  if (qa && qb && qa.unit === qb.unit) return `${(qa.num + qb.num).toFixed(2).replace('.00', '').replace('.', ',')}${qa.unit}`;
+  return [...new Set([a, b].map(String))].join(' + ');
+}
+function aggregateItems(items) {
+  const map = new Map();
+  items.forEach((i) => {
+    const key = i.nome.trim().toLowerCase();
+    if (!map.has(key)) return map.set(key, { ...i, id: crypto.randomUUID(), done: !!i.done });
+    const cur = map.get(key);
+    cur.quantita = mergeQty(cur.quantita, i.quantita);
+    cur.categoria = cur.categoria || i.categoria;
+    cur.done = cur.done && !!i.done;
+  });
+  return [...map.values()];
 }
 
 function currentShopKey() {
-  const profileId = plans[selectedPatientIndex]?.paziente?.nome || 'default';
-  return `${profileId}::week${selectedWeek}`;
+  const id = plans[selectedPatientIndex]?.paziente?.nome || 'default';
+  return `${id}::week${selectedWeek}`;
 }
 
 function defaultShoppingItems() {
-  const program = plans[selectedPatientIndex].programma.filter((d) => (selectedWeek === 1 ? d.giorno <= 7 : d.giorno >= 8));
+  const program = plans[selectedPatientIndex].programma.filter((d) => selectedWeek === 1 ? d.giorno <= 7 : d.giorno >= 8);
   const raw = [];
   program.forEach((d) => {
     Object.values(d.pasti).flat().forEach((p) => raw.push({ nome: p.alimento, quantita: p.quantita, categoria: 'Pasto' }));
@@ -208,33 +153,24 @@ function ensureShoppingState() {
 }
 
 function renderShoppingList() {
-  const items = ensureShoppingState();
+  const items = ensureShoppingState().filter((i) => shoppingFilter === 'all' ? true : shoppingFilter === 'todo' ? !i.done : i.done);
   shoppingList.innerHTML = '';
-  if (!items.length) shoppingList.innerHTML = '<small style="color:var(--muted)">Nessun articolo in lista.</small>';
+  if (!items.length) {
+    shoppingList.innerHTML = '<div class="small">Nessun elemento con questo filtro.</div>';
+    return;
+  }
 
   items.forEach((item) => {
     const row = document.createElement('div');
     row.className = `shop-item ${item.done ? 'done' : ''}`;
+    row.innerHTML = `<button class="icon-btn" data-act="toggle">${item.done ? '✓' : '○'}</button><div class="shop-main ${item.done ? 'done' : ''}"><div><strong>${foodIcon(item.nome)} ${item.nome}</strong> · ${item.quantita}</div><div class="small">${item.categoria || 'Generale'}</div></div><div><button class="icon-btn" data-act="edit">✏️</button><button class="icon-btn" data-act="del">🗑️</button></div>`;
 
-    const check = document.createElement('button');
-    check.className = 'small-btn';
-    check.textContent = item.done ? '✓' : '○';
-    check.addEventListener('click', () => {
+    row.querySelector('[data-act="toggle"]').addEventListener('click', () => {
       item.done = !item.done;
       localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
       renderShoppingList();
     });
-
-    const main = document.createElement('div');
-    main.className = `shop-main ${item.done ? 'done-text' : ''}`;
-    main.innerHTML = `<div><strong>${foodIcon(item.nome)} ${item.nome}</strong> · ${item.quantita}</div><small style="color:var(--muted)">${item.categoria || 'Generale'}</small>`;
-
-    const actions = document.createElement('div');
-    actions.className = 'shop-actions';
-    const edit = document.createElement('button');
-    edit.className = 'small-btn';
-    edit.textContent = '✏️';
-    edit.addEventListener('click', () => {
+    row.querySelector('[data-act="edit"]').addEventListener('click', () => {
       const nome = prompt('Nome articolo', item.nome);
       if (!nome) return;
       item.nome = nome;
@@ -244,118 +180,140 @@ function renderShoppingList() {
       localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
       renderShoppingList();
     });
-
-    const del = document.createElement('button');
-    del.className = 'small-btn';
-    del.textContent = '🗑️';
-    del.addEventListener('click', () => {
+    row.querySelector('[data-act="del"]').addEventListener('click', () => {
       const key = currentShopKey();
       shoppingState[key] = shoppingState[key].filter((x) => x.id !== item.id);
       localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
       renderShoppingList();
     });
-
-    actions.append(edit, del);
-    row.append(check, main, actions);
     shoppingList.appendChild(row);
   });
 }
 
-function upsertShoppingItem(newItem) {
+function addShoppingItem(item) {
   const key = currentShopKey();
   ensureShoppingState();
-  shoppingState[key].push({ ...newItem, id: crypto.randomUUID(), done: false });
+  shoppingState[key].push({ ...item, id: crypto.randomUUID(), done: false });
   shoppingState[key] = aggregateItems(shoppingState[key]);
   localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
 }
 
 addShoppingBtn.addEventListener('click', () => {
-  shoppingForm.hidden = !shoppingForm.hidden;
+  shoppingForm.classList.toggle('hidden');
 });
-
+floatingAdd.addEventListener('click', () => shoppingForm.classList.toggle('hidden'));
 shoppingForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  upsertShoppingItem({ nome: shopName.value.trim(), quantita: shopQty.value.trim(), categoria: shopCategory.value.trim() || 'Generale' });
+  addShoppingItem({ nome: shopName.value.trim(), quantita: shopQty.value.trim(), categoria: shopCategory.value.trim() || 'Generale' });
   shoppingForm.reset();
-  shoppingForm.hidden = true;
+  shoppingForm.classList.add('hidden');
   renderShoppingList();
 });
 
+document.querySelectorAll('[data-filter]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    shoppingFilter = btn.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderShoppingList();
+  });
+});
+
 function renderProfileMenu() {
-  profileMenu.innerHTML = plans.map((plan, idx) => `<button type="button" class="profile-item ${idx === selectedPatientIndex ? 'active' : ''}" data-profile="${idx}">${plan.paziente.nome}</button>`).join('');
+  profileMenu.innerHTML = plans.map((p, i) => `<button class="profile-item ${i === selectedPatientIndex ? 'active' : ''}" data-profile="${i}">${p.paziente.nome}</button>`).join('');
   profileMenu.querySelectorAll('[data-profile]').forEach((btn) => btn.addEventListener('click', () => {
     profileMenu.hidden = true;
     selectPatient(Number(btn.dataset.profile), true, true);
   }));
 }
-
-profileToggle.addEventListener('click', () => {
-  profileMenu.hidden = !profileMenu.hidden;
-});
+profileToggle.addEventListener('click', () => { profileMenu.hidden = !profileMenu.hidden; });
 document.addEventListener('click', (e) => {
   if (!profileMenu.hidden && !profileMenu.contains(e.target) && !profileToggle.contains(e.target)) profileMenu.hidden = true;
 });
 
 function renderWeekButtons() {
-  weekButtons.innerHTML = [1, 2].map((week) => `<button type="button" class="btn ${week === selectedWeek ? 'active' : ''}" data-week="${week}">Settimana ${week}</button>`).join('');
+  weekButtons.innerHTML = [1, 2].map((w) => `<button class="week-btn ${w === selectedWeek ? 'active' : ''}" data-week="${w}">Settimana ${w}</button>`).join('');
   weekButtons.querySelectorAll('[data-week]').forEach((btn) => btn.addEventListener('click', () => selectWeek(Number(btn.dataset.week), true)));
 }
-
 function renderDayButtons(program) {
-  const filtered = program.filter((d) => (selectedWeek === 1 ? d.giorno <= 7 : d.giorno >= 8));
-  dayButtons.innerHTML = filtered.map((day) => {
-    const abbr = WEEKDAY_NAMES[(day.giorno - 1) % 7];
-    return `<button type="button" class="day-btn ${day.giorno === selectedDay ? 'active' : ''}" data-day="${day.giorno}"><span class="abbr">${abbr}</span><span class="num">${day.giorno}</span></button>`;
-  }).join('');
+  const days = program.filter((d) => selectedWeek === 1 ? d.giorno <= 7 : d.giorno >= 8);
+  dayButtons.innerHTML = days.map((d) => `<button class="day-btn ${d.giorno === selectedDay ? 'active' : ''}" data-day="${d.giorno}"><div class="abbr">${WEEKDAY_NAMES[(d.giorno - 1) % 7]}</div><div class="num">${d.giorno}</div></button>`).join('');
   dayButtons.querySelectorAll('[data-day]').forEach((btn) => btn.addEventListener('click', () => selectDay(Number(btn.dataset.day), true)));
 }
 
-function syncPickers() {
-  const program = plans[selectedPatientIndex]?.programma || [];
-  profileName.textContent = plans[selectedPatientIndex]?.paziente?.nome || 'Profilo';
-  renderProfileMenu();
+function renderDashboard(dayPlan) {
+  const profile = plans[selectedPatientIndex].paziente.nome;
+  const currentMeal = dayPlan?.pasti?.pranzo?.[0]?.alimento || 'Nessun pasto';
+  dashboardMealTitle.textContent = `Pranzo: ${currentMeal}`;
+  dashboardMealTime.textContent = dayLabel(selectedDay);
+
+  const done = MEAL_META.filter(([k]) => (dayPlan?.pasti?.[k] || []).length > 0).length;
+  progressText.textContent = `${done} / 5 pasti`;
+  progressValue.style.width = `${(done / 5) * 100}%`;
+  statDay.textContent = dayLabel(selectedDay);
+  statProfile.textContent = profile;
+}
+
+function shareOnWhatsApp() {
+  const profile = plans[selectedPatientIndex];
+  const dayPlan = profile.programma.find((d) => d.giorno === selectedDay);
+  const lines = [`📅 ${dayLabel(selectedDay)}`, `👤 ${profile.paziente.nome}`];
+  MEAL_META.forEach(([k, label, icon]) => {
+    lines.push(`\n${icon} ${label}`);
+    (dayPlan.pasti[k] || []).forEach((i) => lines.push(`• ${foodIcon(i.alimento)} ${i.alimento} (${i.quantita})`));
+  });
+  lines.push(`\n🫒 Condimenti`);
+  Object.entries(dayPlan.condimenti || {}).forEach(([k, v]) => lines.push(`• ${foodIcon(k)} ${k} (${v})`));
+  window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank');
+}
+whatsappShare.addEventListener('click', shareOnWhatsApp);
+
+function renderPlanner(dayPlan) {
+  mealsList.innerHTML = '';
+  MEAL_META.forEach(([key, label, icon]) => {
+    const first = dayPlan.pasti[key]?.[0];
+    const card = document.createElement('div');
+    card.className = 'card meal-card';
+    card.innerHTML = `<div class="meal-icon">${icon}</div><div style="flex:1"><div class="meal-top"><div class="meal-label">${label}</div></div><div class="meal-name">${first ? first.alimento : 'Nessun pasto'}</div><div class="meal-meta">${(dayPlan.pasti[key] || []).map((x) => `${foodIcon(x.alimento)} ${x.alimento} (${x.quantita})`).join(' · ') || '-'}</div></div>`;
+    mealsList.appendChild(card);
+  });
+
+  const condiments = document.createElement('div');
+  condiments.className = 'card';
+  const list = Object.entries(dayPlan.condimenti || {}).map(([k, v]) => `${foodIcon(k)} ${k} (${v})`).join(' · ');
+  condiments.innerHTML = `<strong>🫒 Condimenti</strong><div class="meal-meta" style="margin-top:6px;">${list || '-'}</div>`;
+  mealsList.appendChild(condiments);
+}
+
+function applyProfileVisuals() {
+  const name = plans[selectedPatientIndex].paziente.nome;
+  const color = PROFILE_COLORS[name] || '#4cae4f';
+  document.documentElement.style.setProperty('--primary', color);
+  profileNameWelcome.textContent = `Welcome back, ${name.split(' ')[0]}`;
+  avatarPrimary.textContent = name[0];
+  const other = plans.find((p, i) => i !== selectedPatientIndex)?.paziente?.nome || 'X';
+  avatarSecondary.textContent = other[0];
+}
+
+function renderAll() {
+  const profile = plans[selectedPatientIndex];
+  const dayPlan = profile.programma.find((d) => d.giorno === selectedDay);
+  patientMeta.textContent = `${profile.paziente.nome} · ${profile.paziente.medico} · Visita: ${profile.paziente.data_visita}`;
+  dayChip.textContent = dayLabel(selectedDay);
   renderWeekButtons();
-  renderDayButtons(program);
-  setProfileColor();
-}
-
-function renderDay() {
-  clearError();
-  const selected = plans[selectedPatientIndex];
-  if (!selected) return showError('Paziente non trovato.');
-
-  const dayPlan = selected.programma.find((d) => d.giorno === selectedDay);
-  if (!dayPlan) return showError('Giorno non trovato nel programma.');
-
-  patientMeta.textContent = `${selected.paziente.nome} · ${selected.paziente.indirizzo} · ${selected.paziente.medico} · Visita: ${selected.paziente.data_visita}`;
-  dayChip.textContent = dayLabel(dayPlan.giorno);
-
-  mealsContainer.innerHTML = '';
-  [
-    ['colazione', 'Colazione'],
-    ['spuntino_mattina', 'Spuntino mattina'],
-    ['pranzo', 'Pranzo'],
-    ['spuntino_pomeriggio', 'Spuntino pomeriggio'],
-    ['cena', 'Cena']
-  ].forEach(([key, label]) => mealsContainer.appendChild(mealSection(key, label, dayPlan.pasti[key] || [])));
-
-  const condiments = Object.entries(dayPlan.condimenti || {}).map(([alimento, quantita]) => ({ alimento, quantita }));
-  mealsContainer.appendChild(mealSection('condimenti', 'Condimenti', condiments, 'condimenti'));
-  if (!shoppingSection.hidden) renderShoppingList();
-}
-
-function currentWeekdayAsPlanDay(week = 1) {
-  const jsDay = new Date().getDay();
-  const mondayBased = jsDay === 0 ? 7 : jsDay;
-  return week === 1 ? mondayBased : mondayBased + 7;
+  renderDayButtons(profile.programma);
+  renderDashboard(dayPlan);
+  renderPlanner(dayPlan);
+  renderShoppingList();
+  renderProfileMenu();
+  applyProfileVisuals();
 }
 
 function selectPatient(index, save = false, forceToday = false) {
   selectedPatientIndex = index;
-  const profileId = plans[selectedPatientIndex].paziente.nome;
+  const profileId = plans[index].paziente.nome;
   const state = profileState[profileId];
-  const today = currentWeekdayAsPlanDay(1);
-
+  const today = currentWeekdayAsPlanDay();
   if (forceToday) {
     selectedWeek = 1;
     selectedDay = today;
@@ -366,52 +324,55 @@ function selectPatient(index, save = false, forceToday = false) {
     selectedWeek = 1;
     selectedDay = today;
   }
-  syncPickers();
-  renderDay();
+  renderAll();
   if (save) saveProfileState();
-  localStorage.setItem(SELECTED_PROFILE_KEY, String(selectedPatientIndex));
 }
 
 function selectWeek(week, save = false) {
   const dayOfWeek = ((selectedDay - 1) % 7) + 1;
   selectedWeek = week;
   selectedDay = week === 1 ? dayOfWeek : dayOfWeek + 7;
-  syncPickers();
-  renderDay();
+  renderAll();
   if (save) saveProfileState();
-  localStorage.setItem(SELECTED_PROFILE_KEY, String(selectedPatientIndex));
 }
-
 function selectDay(day, save = false) {
   selectedDay = day;
   selectedWeek = day <= 7 ? 1 : 2;
-  syncPickers();
-  renderDay();
+  renderAll();
   if (save) saveProfileState();
-  localStorage.setItem(SELECTED_PROFILE_KEY, String(selectedPatientIndex));
 }
 
-function initUI() {
+function switchTab(tab) {
+  dashboardSection.classList.toggle('hidden', tab !== 'dashboard');
+  plannerSection.classList.toggle('hidden', tab !== 'planner');
+  shoppingSection.classList.toggle('hidden', tab !== 'shopping');
+  floatingAdd.classList.toggle('hidden', tab !== 'shopping');
+  document.querySelectorAll('.nav-btn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  if (tab === 'settings') {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current === 'dark' ? 'light' : 'dark');
+    switchTab('dashboard');
+  }
+}
+
+document.querySelectorAll('.nav-btn').forEach((btn) => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+function init() {
   loadStates();
   const storedProfile = Number(localStorage.getItem(SELECTED_PROFILE_KEY) || 0);
   const safeProfile = Number.isFinite(storedProfile) && storedProfile >= 0 && storedProfile < plans.length ? storedProfile : 0;
-  selectedWeek = 1;
-  selectedDay = currentWeekdayAsPlanDay(1);
   selectPatient(safeProfile, false, true);
+  switchTab('dashboard');
 }
 
 initTheme();
 fetch('data/piani_alimentari.json')
-  .then((res) => {
-    if (!res.ok) throw new Error(`Errore HTTP ${res.status}`);
-    return res.json();
-  })
+  .then((r) => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
   .then((payload) => {
-    plans = payload.piani_alimentari;
-    if (!Array.isArray(plans) || plans.length === 0) throw new Error('Nessun piano alimentare disponibile.');
-    initUI();
+    plans = payload.piani_alimentari || [];
+    if (!plans.length) throw new Error('Nessun piano alimentare disponibile');
+    init();
   })
   .catch((err) => {
-    patientMeta.textContent = 'Impossibile caricare i dati dei piani.';
-    showError(err.message);
+    patientMeta.textContent = `Errore caricamento: ${err.message}`;
   });

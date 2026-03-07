@@ -7,124 +7,181 @@
     <title>Piani Alimentari 2026</title>
     <style>
       :root {
-        --bg: #f3f6fb;
+        --primary: #4cae4f;
+        --bg: #f6f7f6;
         --surface: #ffffff;
-        --surface-2: #f8faff;
-        --text: #1f2937;
+        --surface-2: #eef2ef;
+        --text: #0f172a;
         --muted: #5b6472;
-        --border: #e5eaf3;
-        --primary: #3b82f6;
-        --primary-2: #1d4ed8;
-        --danger: #b00020;
-        --shadow: 0 12px 32px rgba(21, 31, 54, 0.12);
+        --border: #dbe2dd;
       }
       html[data-theme='dark'] {
-        --bg: #0e1117;
-        --surface: #171c26;
-        --surface-2: #1c2330;
-        --text: #e8ecf3;
-        --muted: #a9b3c4;
-        --border: #2b3444;
-        --primary-2: color-mix(in oklab, var(--primary) 75%, white);
-        --danger: #ff7a7a;
-        --shadow: 0 16px 38px rgba(0, 0, 0, 0.45);
+        --bg: #151d15;
+        --surface: #1f2a1f;
+        --surface-2: #263326;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --border: #334233;
       }
       * { box-sizing: border-box; }
-      body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:radial-gradient(circle at top left, color-mix(in oklab,var(--primary) 28%,white) 0%, var(--bg) 38%); min-height:100vh; }
-      .container { width:min(1140px,100% - 1rem); margin:1rem auto; }
-      .shell { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:clamp(1rem,2vw,1.4rem); box-shadow:var(--shadow); }
-      .topbar { display:flex; align-items:start; justify-content:space-between; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem; }
-      .top-actions { display:flex; gap:.55rem; align-items:center; position:relative; }
-      h1 { margin:0; font-size:clamp(1.22rem,3vw,1.85rem); }
-      .subtitle { margin:.3rem 0 0; color:var(--muted); font-size:.95rem; }
-      .icon-btn,.theme-toggle,.shopping-toggle { border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:999px; padding:.5rem .85rem; cursor:pointer; font-weight:600; }
-      .profile-menu { position:absolute; right:0; top:calc(100% + .4rem); width:min(260px,90vw); border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow); padding:.45rem; z-index:20; }
-      .profile-item { width:100%; border:0; border-radius:10px; padding:.6rem .7rem; text-align:left; background:transparent; color:var(--text); cursor:pointer; }
-      .profile-item.active { background:color-mix(in oklab,var(--primary) 18%,var(--surface)); color:var(--primary-2); font-weight:700; }
-      .picker { margin-bottom:.95rem; }
-      .picker-title { font-size:.85rem; color:var(--muted); margin:0 0 .42rem; }
-      .scroll-row { display:flex; gap:.45rem; overflow-x:auto; padding-bottom:.25rem; }
-      .btn { border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:12px; padding:.5rem .75rem; white-space:nowrap; cursor:pointer; font-size:.9rem; }
-      .btn.active { background:color-mix(in oklab,var(--primary) 18%,var(--surface)); border-color:color-mix(in oklab,var(--primary) 50%,var(--border)); color:var(--primary-2); font-weight:700; }
-      .day-btn { width:62px; min-width:62px; height:72px; border:1px solid var(--border); background:var(--surface-2); border-radius:12px; cursor:pointer; display:grid; place-items:center; padding:.2rem; }
-      html[data-theme='dark'] .day-btn { border-color: color-mix(in oklab,var(--text) 12%,var(--border)); }
-      .day-btn .abbr { font-size:.74rem; text-transform:uppercase; color:var(--muted); line-height:1; }
-      .day-btn .num { font-size:1.55rem; line-height:1; font-weight:800; color:var(--text); }
-      .day-btn.active { background:color-mix(in oklab,var(--primary) 20%,var(--surface)); border-color:color-mix(in oklab,var(--primary) 55%,var(--border)); }
-      .day-btn.active .abbr,.day-btn.active .num { color:var(--primary-2); }
-      .meta { margin:.35rem 0 .75rem; color:var(--muted); }
-      .chip { display:inline-block; background:color-mix(in oklab,var(--primary) 18%,var(--surface)); color:var(--primary-2); border:1px solid color-mix(in oklab,var(--primary) 35%,var(--border)); border-radius:999px; padding:.25rem .65rem; font-size:.8rem; margin-bottom:.6rem; }
-      .error { border:1px solid color-mix(in oklab,var(--danger) 35%,transparent); background:color-mix(in oklab,var(--danger) 12%,var(--surface)); color:var(--danger); border-radius:10px; padding:.65rem .75rem; margin-bottom:.8rem; }
-      .meals-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:.8rem; }
-      .meal { grid-column:span 6; border:1px solid var(--border); background:var(--surface-2); border-radius:14px; padding:.9rem; }
-      .meal.condimenti { grid-column:span 12; }
-      .meal h3 { margin:0 0 .55rem; color:var(--primary-2); }
-      .meal-emoji { margin-right:.35rem; }
-      .meal ul { margin:0; padding-left:1.1rem; }
-      .meal li { margin:.32rem 0; }
+      body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); }
+      .app { max-width: 460px; margin: 0 auto; min-height: 100vh; padding-bottom: 86px; border-inline: 1px solid var(--border); }
+      .header { position: sticky; top: 0; z-index: 20; display:flex; justify-content:space-between; align-items:center; padding: 14px; background: color-mix(in oklab, var(--bg) 85%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+      .profiles { display:flex; align-items:center; gap:10px; }
+      .avatars { display:flex; }
+      .avatar { width: 34px; height: 34px; border-radius: 999px; display:grid; place-items:center; font-size:.8rem; font-weight:700; color:white; border:2px solid var(--bg); }
+      .avatar.secondary { margin-left:-10px; opacity:.65; }
+      .title { font-size: 1rem; margin:0; font-weight:700; }
+      .subtitle { font-size:.72rem; margin:0; color:var(--primary); font-weight:600; }
+      .header-actions { display:flex; gap:8px; align-items:center; position:relative; }
+      .icon-btn { border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:10px; height:36px; padding:0 10px; cursor:pointer; }
+      .profile-menu { position:absolute; right:0; top:42px; background:var(--surface); border:1px solid var(--border); border-radius:10px; min-width:190px; padding:6px; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+      .profile-item { width:100%; text-align:left; border:0; background:transparent; color:var(--text); border-radius:8px; padding:8px; cursor:pointer; }
+      .profile-item.active { background: color-mix(in oklab, var(--primary) 18%, var(--surface)); color:var(--primary); font-weight:700; }
 
-      .shopping-section { margin-top:1rem; border:1px solid var(--border); background:var(--surface-2); border-radius:14px; padding:.9rem; }
-      .shopping-header { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
-      .shopping-header h3 { margin:0; color:var(--primary-2); }
-      .small-btn { border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:8px; padding:.35rem .55rem; cursor:pointer; }
-      .shopping-form { display:grid; gap:.4rem; margin-top:.55rem; }
-      .shopping-form input { border:1px solid var(--border); border-radius:8px; padding:.45rem .55rem; background:var(--surface); color:var(--text); }
-      .shopping-list { margin-top:.65rem; display:grid; gap:.45rem; }
-      .shop-item { border:1px solid var(--border); border-radius:10px; padding:.45rem; display:grid; grid-template-columns:auto 1fr auto; gap:.4rem; align-items:center; }
-      .shop-item.done { opacity:.55; }
-      .shop-main.done-text { text-decoration:line-through; }
-      .shop-actions { display:flex; gap:.25rem; }
+      .section { padding: 14px; }
+      .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; }
+      .hero { overflow:hidden; padding:0; }
+      .hero-top { height:180px; background: linear-gradient(160deg, color-mix(in oklab, var(--primary) 70%, white), #1112); display:flex; align-items:end; padding:10px; }
+      .badge { background:var(--primary); color:white; font-size:.64rem; border-radius:999px; padding:3px 8px; font-weight:700; letter-spacing:.04em; }
+      .hero-body { padding:12px; }
+      .muted { color:var(--muted); }
 
-      @media (max-width:700px){ .meal,.meal.condimenti{grid-column:span 12;} .theme-toggle{width:100%;} .day-btn{width:56px;min-width:56px;height:64px;} .day-btn .num{font-size:1.3rem;} }
+      .progress-bar { height:10px; border-radius:999px; background:color-mix(in oklab,var(--primary) 12%, var(--surface)); overflow:hidden; }
+      .progress-value { height:100%; background:var(--primary); }
+
+      .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+      .stat { background: color-mix(in oklab,var(--primary) 8%, var(--surface)); border:1px solid color-mix(in oklab,var(--primary) 20%, var(--border)); border-radius:12px; padding:10px; }
+
+      .week-row,.day-row { display:flex; gap:8px; overflow:auto; padding-bottom:4px; }
+      .week-btn,.day-btn,.chip-btn { border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:12px; cursor:pointer; }
+      .week-btn { padding:8px 12px; white-space:nowrap; }
+      .day-btn { width:58px; min-width:58px; height:74px; display:grid; place-items:center; }
+      .day-btn .abbr { font-size:.72rem; text-transform:uppercase; color:var(--muted); }
+      .day-btn .num { font-size:1.3rem; font-weight:800; }
+      .active { background: color-mix(in oklab,var(--primary) 18%, var(--surface)); border-color: color-mix(in oklab,var(--primary) 45%, var(--border)); color:var(--primary); }
+
+      .meal-list { display:grid; gap:10px; }
+      .meal-card { display:flex; gap:10px; align-items:center; }
+      .meal-icon { width:58px; height:58px; border-radius:12px; display:grid; place-items:center; font-size:1.8rem; background:color-mix(in oklab,var(--primary) 10%, var(--surface)); }
+      .meal-top { display:flex; justify-content:space-between; align-items:center; }
+      .meal-label { font-size:.66rem; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:.06em; }
+      .meal-name { font-size:.92rem; font-weight:700; }
+      .meal-meta { font-size:.7rem; color:var(--muted); }
+
+      .shopping-tools { display:flex; gap:8px; margin-bottom:10px; }
+      .chip-btn { padding:6px 10px; font-size:.8rem; }
+      .shopping-list { display:grid; gap:8px; }
+      .shop-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px; display:grid; grid-template-columns:auto 1fr auto; gap:8px; align-items:center; }
+      .shop-item.done { opacity:.6; }
+      .shop-main.done { text-decoration: line-through; }
+      .small { font-size:.75rem; color:var(--muted); }
+
+      .floating-add { position: fixed; right: max(20px, calc((100vw - 460px)/2 + 20px)); bottom: 96px; width:52px; height:52px; border-radius:999px; border:0; background:var(--primary); color:white; font-size:1.6rem; cursor:pointer; box-shadow:0 12px 30px #0004; }
+
+      .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width:100%; max-width:460px; display:flex; border-top:1px solid var(--border); background: color-mix(in oklab, var(--surface) 82%, transparent); backdrop-filter: blur(10px); }
+      .nav-btn { flex:1; border:0; background:transparent; color:var(--muted); padding:8px 6px 12px; display:grid; gap:2px; place-items:center; cursor:pointer; font-size:.7rem; }
+      .nav-btn.active { color:var(--primary); font-weight:700; }
+
+      .hidden { display:none !important; }
     </style>
   </head>
   <body>
-    <main class="container">
-      <section class="shell">
-        <div class="topbar">
+    <div class="app">
+      <header class="header">
+        <div class="profiles">
+          <div class="avatars">
+            <div id="avatarPrimary" class="avatar">P</div>
+            <div id="avatarSecondary" class="avatar secondary">D</div>
+          </div>
           <div>
-            <h1>Piani Alimentari 2026</h1>
-            <p class="subtitle">Hub familiare: piani alimentari e lista spesa</p>
+            <h1 class="title">Daily Nutrition</h1>
+            <p class="subtitle" id="welcomeLine">Welcome back</p>
           </div>
-          <div class="top-actions">
-            <button id="shoppingToggle" class="shopping-toggle" type="button">🛒 Lista Spesa</button>
-            <button id="profileToggle" class="icon-btn" type="button">👤 <span id="profileName">Profilo</span></button>
-            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambia tema">🌙 Modalità notte</button>
-            <button id="whatsappShare" class="theme-toggle" type="button" aria-label="Condividi su WhatsApp">📲 Condividi Giorno</button>
-            <div id="profileMenu" class="profile-menu" hidden></div>
+        </div>
+        <div class="header-actions">
+          <button id="profileToggle" class="icon-btn">👤</button>
+          <button id="themeToggle" class="icon-btn">🌙</button>
+          <div id="profileMenu" class="profile-menu" hidden></div>
+        </div>
+      </header>
+
+      <section id="dashboardSection" class="section">
+        <div class="card hero">
+          <div class="hero-top"><span class="badge">RECOMMENDED</span></div>
+          <div class="hero-body">
+            <p class="muted" style="margin:0;font-size:.75rem;font-weight:700;text-transform:uppercase;">Current meal</p>
+            <h2 id="dashboardMealTitle" style="margin:.25rem 0 .35rem;font-size:1.05rem;">...</h2>
+            <div class="muted" id="dashboardMealTime" style="font-size:.82rem;">Giorno attuale</div>
           </div>
         </div>
 
-        <div class="picker">
-          <p class="picker-title">Settimana</p>
-          <div id="weekButtons" class="scroll-row"></div>
-        </div>
-
-        <div class="picker">
-          <p class="picker-title">Giorno</p>
-          <div id="dayButtons" class="scroll-row"></div>
-        </div>
-
-        <p id="patientMeta" class="meta">Caricamento dati...</p>
-        <span class="chip" id="dayChip">Giorno selezionato</span>
-        <div id="error" class="error" hidden></div>
-        <div class="meals-grid" id="meals"></div>
-
-        <section id="shoppingSection" class="shopping-section" hidden>
-          <div class="shopping-header">
-            <h3>Lista della Spesa</h3>
-            <button id="addShoppingBtn" class="small-btn" type="button">+ Aggiungi</button>
+        <div class="card" style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <strong>Daily Progress</strong><span id="progressText" class="muted" style="font-size:.82rem;">0/0 pasti</span>
           </div>
-          <form id="shoppingForm" class="shopping-form" hidden>
-            <input id="shopName" placeholder="Nome articolo" required />
-            <input id="shopQty" placeholder="Quantità (es. 200g)" required />
-            <input id="shopCategory" placeholder="Categoria (es. Verdure)" />
-            <button class="small-btn" type="submit">Salva</button>
-          </form>
-          <div id="shoppingList" class="shopping-list"></div>
-        </section>
+          <div class="progress-bar" style="margin-top:8px;"><div id="progressValue" class="progress-value" style="width:0%"></div></div>
+        </div>
+
+        <div class="stats" style="margin-top:10px;">
+          <div class="stat"><div class="small">Giorno</div><div id="statDay" style="font-weight:800;">-</div></div>
+          <div class="stat"><div class="small">Profilo</div><div id="statProfile" style="font-weight:800;">-</div></div>
+        </div>
       </section>
-    </main>
+
+      <section id="plannerSection" class="section hidden">
+        <div class="card">
+          <div class="small" style="text-transform:uppercase;font-weight:700;letter-spacing:.08em;">Settimane</div>
+          <div id="weekButtons" class="week-row" style="margin-top:8px;"></div>
+          <div class="small" style="text-transform:uppercase;font-weight:700;letter-spacing:.08em;margin-top:10px;">Seleziona giorno</div>
+          <div id="dayButtons" class="day-row" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="card" style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div>
+            <div id="patientMeta" class="small">...</div>
+            <div id="dayChip" style="font-weight:700;"></div>
+          </div>
+          <button id="whatsappShare" class="icon-btn">📲 WhatsApp</button>
+        </div>
+
+        <div id="mealsList" class="meal-list" style="margin-top:10px;"></div>
+      </section>
+
+      <section id="shoppingSection" class="section hidden">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <strong>Weekly Groceries</strong>
+            <button id="addShoppingBtn" class="icon-btn">＋</button>
+          </div>
+
+          <form id="shoppingForm" class="hidden" style="display:grid;gap:8px;margin-top:10px;">
+            <input id="shopName" placeholder="Nome articolo" required style="border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px;" />
+            <input id="shopQty" placeholder="Quantità" required style="border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px;" />
+            <input id="shopCategory" placeholder="Categoria" style="border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px;" />
+            <button class="icon-btn" type="submit">Salva</button>
+          </form>
+
+          <div class="shopping-tools">
+            <button class="chip-btn active" data-filter="all">All</button>
+            <button class="chip-btn" data-filter="todo">To Buy</button>
+            <button class="chip-btn" data-filter="done">Bought</button>
+          </div>
+
+          <div id="shoppingList" class="shopping-list"></div>
+        </div>
+      </section>
+    </div>
+
+    <button id="floatingAdd" class="floating-add hidden">＋</button>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="dashboard">🏠<span>Home</span></button>
+      <button class="nav-btn" data-tab="planner">📅<span>Plan</span></button>
+      <button class="nav-btn" data-tab="shopping">🛒<span>Shopping</span></button>
+      <button class="nav-btn" data-tab="settings">⚙️<span>Theme</span></button>
+    </nav>
+
     <script src="app.js"></script>
   </body>
 </html>

@@ -1,38 +1,30 @@
 # PianiAlimentari2026
 
-Web app per consultare i piani alimentari 2026 in modo semplice, moderno e leggibile.
+Web app mobile-first per consultare i piani alimentari 2026 e gestire la spesa.
 
 ## Avvio locale
-
-Dal root del progetto:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Poi apri `http://localhost:8000`.
+Apri `http://localhost:8000`.
 
-## Funzionalità UI
+## Sezioni app
 
-- Selettore profilo rapido in alto a destra (Paolo / Daniela) con menù popup.
-- Colori dinamici per profilo: Paolo in tema azzurro, Daniela in tema rosa/magenta.
-- Modalità notte/giorno con toggle manuale e persistenza su `localStorage`.
-- Selezione settimana e giorni con pulsanti compatti.
-- Pulsanti giorno quadrati: abbreviazione sopra (`lun`) e numero grande sotto (`1`).
-- Etichetta completa giorno nel formato `Giorno X - NomeGiorno`.
-- All'apertura dell'app, selezione automatica del giorno corrente della settimana.
-- Condivisione del giorno corrente su WhatsApp con riepilogo e icone cibo.
-- Stato indipendente per ogni profilo (settimana/giorno).
+- **Dashboard**: riepilogo del giorno con meal card, progress e quick stats.
+- **Plan**: selettore settimana/giorno 14 giorni con card pasti e condimenti.
+- **Shopping**: lista spesa deduplicata con filtri, aggiunta, modifica, rimozione e stato acquisto.
 
-## Lista della spesa
+## Funzionalità
 
-- Sezione separata richiamabile dal pulsante `🛒 Lista Spesa` nell'header.
-- Deduplica automatica degli alimenti uguali (unione dei doppioni).
-- Aggiunta articolo manuale (`+ Aggiungi`) con nome, quantità e categoria.
-- Modifica rapida articolo (✏️), eliminazione (🗑️), stato acquistato (✓/○).
-- Persistenza locale separata per profilo e settimana.
+- Cambio profilo rapido (Paolo/Daniela) con tema colore dinamico.
+- Avvio sempre sul giorno corrente della settimana (data odierna).
+- Tema chiaro/scuro con persistenza locale.
+- Condivisione WhatsApp del giorno con icone cibo.
+- Persistenza locale separata per profilo/settimana (`localStorage`).
 
 ## Dati
 
-- `data/piani_alimentari.json`: contiene 2 piani alimentari completi (14 giorni ciascuno) con paziente, pasti giornalieri e condimenti.
-- `index.html` + `app.js`: interfaccia web che legge il JSON e mostra pasti e condimenti per paziente/giorno.
+- `data/piani_alimentari.json`: 2 piani completi da 14 giorni.
+- `index.html` + `app.js`: UI + logica client-side.
