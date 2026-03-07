@@ -26,6 +26,7 @@ let selectedDay = 1;
 const THEME_KEY = 'piani-theme';
 const PROFILE_STATE_KEY = 'piani-profile-state';
 const SHOPPING_KEY = 'piani-shopping-state';
+const SELECTED_PROFILE_KEY = 'piani-selected-profile';
 const WEEKDAY_NAMES = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'];
 const PROFILE_COLORS = { 'Paolo Monaldi': '#3b82f6', 'Daniela Franciosi': '#d946ef' };
 const MEAL_ICONS = {
@@ -284,7 +285,7 @@ function renderProfileMenu() {
   profileMenu.innerHTML = plans.map((plan, idx) => `<button type="button" class="profile-item ${idx === selectedPatientIndex ? 'active' : ''}" data-profile="${idx}">${plan.paziente.nome}</button>`).join('');
   profileMenu.querySelectorAll('[data-profile]').forEach((btn) => btn.addEventListener('click', () => {
     profileMenu.hidden = true;
-    selectPatient(Number(btn.dataset.profile), true);
+    selectPatient(Number(btn.dataset.profile), true, true);
   }));
 }
 
@@ -368,6 +369,7 @@ function selectPatient(index, save = false, forceToday = false) {
   syncPickers();
   renderDay();
   if (save) saveProfileState();
+  localStorage.setItem(SELECTED_PROFILE_KEY, String(selectedPatientIndex));
 }
 
 function selectWeek(week, save = false) {
@@ -377,6 +379,7 @@ function selectWeek(week, save = false) {
   syncPickers();
   renderDay();
   if (save) saveProfileState();
+  localStorage.setItem(SELECTED_PROFILE_KEY, String(selectedPatientIndex));
 }
 
 function selectDay(day, save = false) {
@@ -385,13 +388,16 @@ function selectDay(day, save = false) {
   syncPickers();
   renderDay();
   if (save) saveProfileState();
+  localStorage.setItem(SELECTED_PROFILE_KEY, String(selectedPatientIndex));
 }
 
 function initUI() {
   loadStates();
+  const storedProfile = Number(localStorage.getItem(SELECTED_PROFILE_KEY) || 0);
+  const safeProfile = Number.isFinite(storedProfile) && storedProfile >= 0 && storedProfile < plans.length ? storedProfile : 0;
   selectedWeek = 1;
   selectedDay = currentWeekdayAsPlanDay(1);
-  selectPatient(0, false, true);
+  selectPatient(safeProfile, false, true);
 }
 
 initTheme();
