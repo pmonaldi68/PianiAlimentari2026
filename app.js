@@ -1,19 +1,24 @@
-const patientSelect = document.getElementById('patientSelect');
-const daySelect = document.getElementById('daySelect');
+const patientButtons = document.getElementById('patientButtons');
+const weekButtons = document.getElementById('weekButtons');
+const dayButtons = document.getElementById('dayButtons');
 const mealsContainer = document.getElementById('meals');
 const patientMeta = document.getElementById('patientMeta');
 const errorBox = document.getElementById('error');
 const dayChip = document.getElementById('dayChip');
 const themeToggle = document.getElementById('themeToggle');
-const quickPatients = document.getElementById('quickPatients');
-const mobilePatients = document.getElementById('mobilePatients');
-const mobileDays = document.getElementById('mobileDays');
 
 let plans = [];
 let selectedPatientIndex = 0;
+let selectedWeek = 1;
 let selectedDay = 1;
 
 const THEME_KEY = 'piani-theme';
+const WEEKDAY_NAMES = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+
+function dayLabel(dayNumber) {
+  const weekday = WEEKDAY_NAMES[(dayNumber - 1) % 7];
+  return `Giorno ${dayNumber} - ${weekday}`;
+}
 
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
@@ -59,55 +64,42 @@ function mealSection(title, items, extraClass = '') {
   return section;
 }
 
-function renderQuickPatients() {
-  quickPatients.innerHTML = plans
-    .map((plan, idx) => `<button type="button" class="pill ${idx === selectedPatientIndex ? 'active' : ''}" data-patient="${idx}">${plan.paziente.nome}</button>`)
+function renderPatientButtons() {
+  patientButtons.innerHTML = plans
+    .map((plan, idx) => `<button type="button" class="btn ${idx === selectedPatientIndex ? 'active' : ''}" data-patient="${idx}">${plan.paziente.nome}</button>`)
     .join('');
 
-  quickPatients.querySelectorAll('[data-patient]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      selectPatient(Number(btn.dataset.patient));
-    });
+  patientButtons.querySelectorAll('[data-patient]').forEach((btn) => {
+    btn.addEventListener('click', () => selectPatient(Number(btn.dataset.patient)));
   });
 }
 
-function renderMobilePatients() {
-  mobilePatients.innerHTML = plans
-    .map((plan, idx) => `<button type="button" class="mobile-btn ${idx === selectedPatientIndex ? 'active' : ''}" data-mobile-patient="${idx}">${plan.paziente.nome}</button>`)
+function renderWeekButtons() {
+  weekButtons.innerHTML = [1, 2]
+    .map((week) => `<button type="button" class="btn ${week === selectedWeek ? 'active' : ''}" data-week="${week}">Settimana ${week}</button>`)
     .join('');
 
-  mobilePatients.querySelectorAll('[data-mobile-patient]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      selectPatient(Number(btn.dataset.mobilePatient));
-    });
+  weekButtons.querySelectorAll('[data-week]').forEach((btn) => {
+    btn.addEventListener('click', () => selectWeek(Number(btn.dataset.week)));
   });
 }
 
-function renderMobileDays(programma) {
-  mobileDays.innerHTML = programma
-    .map((day) => `<button type="button" class="mobile-btn ${day.giorno === selectedDay ? 'active' : ''}" data-mobile-day="${day.giorno}">Giorno ${day.giorno}</button>`)
+function renderDayButtons(program) {
+  const filtered = program.filter((d) => (selectedWeek === 1 ? d.giorno <= 7 : d.giorno >= 8));
+  dayButtons.innerHTML = filtered
+    .map((day) => `<button type="button" class="btn ${day.giorno === selectedDay ? 'active' : ''}" data-day="${day.giorno}">${dayLabel(day.giorno)}</button>`)
     .join('');
 
-  mobileDays.querySelectorAll('[data-mobile-day]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      selectDay(Number(btn.dataset.mobileDay));
-    });
+  dayButtons.querySelectorAll('[data-day]').forEach((btn) => {
+    btn.addEventListener('click', () => selectDay(Number(btn.dataset.day)));
   });
 }
 
-function fillDays(programma) {
-  daySelect.innerHTML = programma
-    .map((day) => `<option value="${day.giorno}">Giorno ${day.giorno}</option>`)
-    .join('');
-}
-
-function syncControls(programma) {
-  patientSelect.value = String(selectedPatientIndex);
-  fillDays(programma);
-  daySelect.value = String(selectedDay);
-  renderQuickPatients();
-  renderMobilePatients();
-  renderMobileDays(programma);
+function syncPickers() {
+  const program = plans[selectedPatientIndex]?.programma || [];
+  renderPatientButtons();
+  renderWeekButtons();
+  renderDayButtons(program);
 }
 
 function renderDay() {
@@ -127,7 +119,7 @@ function renderDay() {
 
   const { paziente } = selected;
   patientMeta.textContent = `${paziente.nome} · ${paziente.indirizzo} · ${paziente.medico} · Visita: ${paziente.data_visita}`;
-  dayChip.textContent = `Giorno ${dayPlan.giorno}`;
+  dayChip.textContent = dayLabel(dayPlan.giorno);
 
   mealsContainer.innerHTML = '';
   const sections = [
@@ -154,35 +146,28 @@ function selectPatient(index) {
   }
 
   selectedPatientIndex = index;
-  selectedDay = program[0].giorno;
-  syncControls(program);
+  selectedWeek = 1;
+  selectedDay = 1;
+  syncPickers();
+  renderDay();
+}
+
+function selectWeek(week) {
+  selectedWeek = week;
+  selectedDay = week === 1 ? 1 : 8;
+  syncPickers();
   renderDay();
 }
 
 function selectDay(day) {
   selectedDay = day;
-  const program = plans[selectedPatientIndex]?.programma || [];
-  syncControls(program);
+  selectedWeek = day <= 7 ? 1 : 2;
+  syncPickers();
   renderDay();
 }
 
-function initControls() {
-  patientSelect.innerHTML = plans
-    .map((plan, idx) => `<option value="${idx}">${plan.paziente.nome}</option>`)
-    .join('');
-
-  const initialProgram = plans[selectedPatientIndex].programma;
-  selectedDay = initialProgram[0].giorno;
-  syncControls(initialProgram);
-
-  patientSelect.addEventListener('change', () => {
-    selectPatient(Number(patientSelect.value));
-  });
-
-  daySelect.addEventListener('change', () => {
-    selectDay(Number(daySelect.value));
-  });
-
+function initUI() {
+  syncPickers();
   renderDay();
 }
 
@@ -200,7 +185,7 @@ fetch('data/piani_alimentari.json')
     if (!Array.isArray(plans) || plans.length === 0) {
       throw new Error('Nessun piano alimentare disponibile.');
     }
-    initControls();
+    initUI();
   })
   .catch((err) => {
     patientMeta.textContent = 'Impossibile caricare i dati dei piani.';

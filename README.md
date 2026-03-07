@@ -15,8 +15,8 @@ Poi apri `http://localhost:8000`.
 ## Funzionalità UI
 
 - Interfaccia responsive (desktop, tablet, mobile).
-- Su telefono usa pulsanti (non select a discesa) per scegliere paziente e giorno.
-- Cambio rapido paziente tramite pulsanti "pill" sempre visibili.
+- Navigazione totalmente a pulsanti (niente caselle a discesa) per paziente, settimana e giorno.
+- Etichette giorni complete nel formato: `Giorno X - NomeGiorno` (es. `Giorno 1 - Lunedì`).
 - Modalità notte/giorno con toggle manuale, preferenza sistema e salvataggio su `localStorage`.
 
 ## Dati
