@@ -10,6 +10,7 @@ const profileName = document.getElementById('profileName');
 const profileMenu = document.getElementById('profileMenu');
 const shoppingToggle = document.getElementById('shoppingToggle');
 const shoppingSection = document.getElementById('shoppingSection');
+const whatsappShare = document.getElementById('whatsappShare');
 const shoppingList = document.getElementById('shoppingList');
 const addShoppingBtn = document.getElementById('addShoppingBtn');
 const shoppingForm = document.getElementById('shoppingForm');
@@ -27,6 +28,14 @@ const PROFILE_STATE_KEY = 'piani-profile-state';
 const SHOPPING_KEY = 'piani-shopping-state';
 const WEEKDAY_NAMES = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'];
 const PROFILE_COLORS = { 'Paolo Monaldi': '#3b82f6', 'Daniela Franciosi': '#d946ef' };
+const MEAL_ICONS = {
+  colazione: '🥣',
+  spuntino_mattina: '🍏',
+  pranzo: '🍝',
+  spuntino_pomeriggio: '🥜',
+  cena: '🍽️',
+  condimenti: '🫒'
+};
 
 let profileState = {};
 let shoppingState = {};
@@ -34,6 +43,57 @@ let shoppingState = {};
 function dayLabel(dayNumber) {
   const weekday = WEEKDAY_NAMES[(dayNumber - 1) % 7];
   return `Giorno ${dayNumber} - ${weekday.charAt(0).toUpperCase() + weekday.slice(1)}`;
+}
+
+function foodIcon(name = '') {
+  const v = name.toLowerCase();
+  if (v.includes('acqua')) return '💧';
+  if (v.includes('latte') || v.includes('yogurt') || v.includes('formaggio') || v.includes('parmigiano')) return '🥛';
+  if (v.includes('pane') || v.includes('pasta') || v.includes('riso') || v.includes('farro') || v.includes('quinoa') || v.includes('pizza') || v.includes('gnoc')) return '🍞';
+  if (v.includes('pollo') || v.includes('tacchino') || v.includes('manzo') || v.includes('maiale') || v.includes('bresaola') || v.includes('prosciutto')) return '🍖';
+  if (v.includes('salmone') || v.includes('cernia') || v.includes('polpi') || v.includes('frutti di mare')) return '🐟';
+  if (v.includes('mela') || v.includes('arance') || v.includes('pera') || v.includes('kiwi') || v.includes('ananas') || v.includes('mandarini')) return '🍎';
+  if (v.includes('insalata') || v.includes('carote') || v.includes('broccoli') || v.includes('zucca') || v.includes('finocchi') || v.includes('pomodori')) return '🥗';
+  if (v.includes('olio')) return '🫒';
+  return '🍴';
+}
+
+function getCurrentDayPlan() {
+  const selected = plans[selectedPatientIndex];
+  if (!selected) return null;
+  return selected.programma.find((d) => d.giorno === selectedDay) || null;
+}
+
+function shareOnWhatsApp() {
+  const selected = plans[selectedPatientIndex];
+  const dayPlan = getCurrentDayPlan();
+  if (!selected || !dayPlan) return;
+
+  const lines = [];
+  lines.push(`📅 ${dayLabel(dayPlan.giorno)}`);
+  lines.push(`👤 ${selected.paziente.nome}`);
+
+  const sections = [
+    ['colazione', 'Colazione'],
+    ['spuntino_mattina', 'Spuntino mattina'],
+    ['pranzo', 'Pranzo'],
+    ['spuntino_pomeriggio', 'Spuntino pomeriggio'],
+    ['cena', 'Cena']
+  ];
+
+  sections.forEach(([key, label]) => {
+    lines.push(`\n${MEAL_ICONS[key]} ${label}`);
+    (dayPlan.pasti[key] || []).forEach((i) => lines.push(`• ${foodIcon(i.alimento)} ${i.alimento} (${i.quantita})`));
+  });
+
+  const condimenti = Object.entries(dayPlan.condimenti || {});
+  if (condimenti.length) {
+    lines.push(`\n${MEAL_ICONS.condimenti} Condimenti`);
+    condimenti.forEach(([k, v]) => lines.push(`• ${foodIcon(k)} ${k} (${v})`));
+  }
+
+  const msg = encodeURIComponent(lines.join('\n'));
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
 }
 
 function setProfileColor() {
@@ -63,6 +123,7 @@ shoppingToggle.addEventListener('click', () => {
   shoppingToggle.textContent = shoppingSection.hidden ? '🛒 Lista Spesa' : '🛒 Chiudi Spesa';
   if (!shoppingSection.hidden) renderShoppingList();
 });
+whatsappShare.addEventListener('click', shareOnWhatsApp);
 
 function showError(message) {
   errorBox.textContent = message;
@@ -92,20 +153,21 @@ function aggregateItems(items) {
   items.forEach((item) => {
     const key = `${item.nome}`.trim().toLowerCase();
     if (!map.has(key)) {
-      map.set(key, { ...item, id: crypto.randomUUID(), done: false });
+      map.set(key, { ...item, id: crypto.randomUUID(), done: item.done || false });
       return;
     }
     const current = map.get(key);
     current.quantita = mergeQty(current.quantita, item.quantita);
     current.categoria = current.categoria || item.categoria;
+    current.done = current.done && item.done;
   });
   return [...map.values()];
 }
 
-function mealSection(title, items, extraClass = '') {
+function mealSection(key, title, items, extraClass = '') {
   const section = document.createElement('section');
   section.className = `meal ${extraClass}`.trim();
-  section.innerHTML = `<h3>${title}</h3><ul>${items.length ? items.map((i) => `<li>${i.alimento}: <strong>${i.quantita}</strong></li>`).join('') : '<li>Nessun dato disponibile</li>'}</ul>`;
+  section.innerHTML = `<h3><span class="meal-emoji">${MEAL_ICONS[key] || '🍽️'}</span> ${title}</h3><ul>${items.length ? items.map((i) => `<li>${foodIcon(i.alimento)} ${i.alimento}: <strong>${i.quantita}</strong></li>`).join('') : '<li>Nessun dato disponibile</li>'}</ul>`;
   return section;
 }
 
@@ -147,6 +209,7 @@ function ensureShoppingState() {
 function renderShoppingList() {
   const items = ensureShoppingState();
   shoppingList.innerHTML = '';
+  if (!items.length) shoppingList.innerHTML = '<small style="color:var(--muted)">Nessun articolo in lista.</small>';
 
   items.forEach((item) => {
     const row = document.createElement('div');
@@ -163,7 +226,7 @@ function renderShoppingList() {
 
     const main = document.createElement('div');
     main.className = `shop-main ${item.done ? 'done-text' : ''}`;
-    main.innerHTML = `<div><strong>${item.nome}</strong> · ${item.quantita}</div><small style="color:var(--muted)">${item.categoria || 'Generale'}</small>`;
+    main.innerHTML = `<div><strong>${foodIcon(item.nome)} ${item.nome}</strong> · ${item.quantita}</div><small style="color:var(--muted)">${item.categoria || 'Generale'}</small>`;
 
     const actions = document.createElement('div');
     actions.className = 'shop-actions';
@@ -175,8 +238,9 @@ function renderShoppingList() {
       if (!nome) return;
       item.nome = nome;
       item.quantita = prompt('Quantità', item.quantita) || item.quantita;
+      const key = currentShopKey();
+      shoppingState[key] = aggregateItems(shoppingState[key]);
       localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
-      shoppingState[currentShopKey()] = aggregateItems(shoppingState[currentShopKey()]);
       renderShoppingList();
     });
 
@@ -266,8 +330,16 @@ function renderDay() {
   dayChip.textContent = dayLabel(dayPlan.giorno);
 
   mealsContainer.innerHTML = '';
-  [['colazione', 'Colazione'], ['spuntino_mattina', 'Spuntino mattina'], ['pranzo', 'Pranzo'], ['spuntino_pomeriggio', 'Spuntino pomeriggio'], ['cena', 'Cena']].forEach(([key, label]) => mealsContainer.appendChild(mealSection(label, dayPlan.pasti[key] || [])));
-  mealsContainer.appendChild(mealSection('Condimenti', Object.entries(dayPlan.condimenti || {}).map(([alimento, quantita]) => ({ alimento, quantita })), 'condimenti'));
+  [
+    ['colazione', 'Colazione'],
+    ['spuntino_mattina', 'Spuntino mattina'],
+    ['pranzo', 'Pranzo'],
+    ['spuntino_pomeriggio', 'Spuntino pomeriggio'],
+    ['cena', 'Cena']
+  ].forEach(([key, label]) => mealsContainer.appendChild(mealSection(key, label, dayPlan.pasti[key] || [])));
+
+  const condiments = Object.entries(dayPlan.condimenti || {}).map(([alimento, quantita]) => ({ alimento, quantita }));
+  mealsContainer.appendChild(mealSection('condimenti', 'Condimenti', condiments, 'condimenti'));
   if (!shoppingSection.hidden) renderShoppingList();
 }
 
@@ -281,8 +353,10 @@ function selectPatient(index, save = false) {
   selectedPatientIndex = index;
   const profileId = plans[selectedPatientIndex].paziente.nome;
   const state = profileState[profileId];
-  if (state) { selectedWeek = state.week; selectedDay = state.day; }
-  else {
+  if (state) {
+    selectedWeek = state.week;
+    selectedDay = state.day;
+  } else {
     selectedWeek = currentWeekdayAsPlanDay() <= 7 ? 1 : 2;
     selectedDay = currentWeekdayAsPlanDay(selectedWeek);
   }

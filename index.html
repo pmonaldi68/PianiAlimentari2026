@@ -59,6 +59,7 @@
       .meal { grid-column:span 6; border:1px solid var(--border); background:var(--surface-2); border-radius:14px; padding:.9rem; }
       .meal.condimenti { grid-column:span 12; }
       .meal h3 { margin:0 0 .55rem; color:var(--primary-2); }
+      .meal-emoji { margin-right:.35rem; }
       .meal ul { margin:0; padding-left:1.1rem; }
       .meal li { margin:.32rem 0; }
 
@@ -74,7 +75,7 @@
       .shop-main.done-text { text-decoration:line-through; }
       .shop-actions { display:flex; gap:.25rem; }
 
-      @media (max-width:700px){ .meal,.meal.condimenti{grid-column:span 12;} .theme-toggle{width:100%;} }
+      @media (max-width:700px){ .meal,.meal.condimenti{grid-column:span 12;} .theme-toggle{width:100%;} .day-btn{width:56px;min-width:56px;height:64px;} .day-btn .num{font-size:1.3rem;} }
     </style>
   </head>
   <body>
@@ -89,6 +90,7 @@
             <button id="shoppingToggle" class="shopping-toggle" type="button">🛒 Lista Spesa</button>
             <button id="profileToggle" class="icon-btn" type="button">👤 <span id="profileName">Profilo</span></button>
             <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambia tema">🌙 Modalità notte</button>
+            <button id="whatsappShare" class="theme-toggle" type="button" aria-label="Condividi su WhatsApp">📲 Condividi Giorno</button>
             <div id="profileMenu" class="profile-menu" hidden></div>
           </div>
         </div>
