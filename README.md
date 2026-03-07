@@ -20,10 +20,12 @@ Poi apri `http://localhost:8000`.
 - Selezione settimana e giorni con pulsanti compatti.
 - Pulsanti giorno quadrati: abbreviazione sopra (`lun`) e numero grande sotto (`1`).
 - Etichetta completa giorno nel formato `Giorno X - NomeGiorno`.
-- Stato indipendente per ogni profilo (settimana/giorno) e lista della spesa separata per profilo + settimana.
+- Stato indipendente per ogni profilo (settimana/giorno).
 
 ## Lista della spesa
 
+- Sezione separata richiamabile dal pulsante `🛒 Lista Spesa` nell'header.
+- Deduplica automatica degli alimenti uguali (unione dei doppioni).
 - Aggiunta articolo manuale (`+ Aggiungi`) con nome, quantità e categoria.
 - Modifica rapida articolo (✏️), eliminazione (🗑️), stato acquistato (✓/○).
 - Persistenza locale separata per profilo e settimana.

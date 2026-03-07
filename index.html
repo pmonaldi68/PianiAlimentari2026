@@ -18,7 +18,6 @@
         --danger: #b00020;
         --shadow: 0 12px 32px rgba(21, 31, 54, 0.12);
       }
-
       html[data-theme='dark'] {
         --bg: #0e1117;
         --surface: #171c26;
@@ -30,198 +29,52 @@
         --danger: #ff7a7a;
         --shadow: 0 16px 38px rgba(0, 0, 0, 0.45);
       }
-
       * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        color: var(--text);
-        background: radial-gradient(circle at top left, color-mix(in oklab, var(--primary) 28%, white) 0%, var(--bg) 38%);
-        min-height: 100vh;
-      }
+      body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:radial-gradient(circle at top left, color-mix(in oklab,var(--primary) 28%,white) 0%, var(--bg) 38%); min-height:100vh; }
+      .container { width:min(1140px,100% - 1rem); margin:1rem auto; }
+      .shell { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:clamp(1rem,2vw,1.4rem); box-shadow:var(--shadow); }
+      .topbar { display:flex; align-items:start; justify-content:space-between; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem; }
+      .top-actions { display:flex; gap:.55rem; align-items:center; position:relative; }
+      h1 { margin:0; font-size:clamp(1.22rem,3vw,1.85rem); }
+      .subtitle { margin:.3rem 0 0; color:var(--muted); font-size:.95rem; }
+      .icon-btn,.theme-toggle,.shopping-toggle { border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:999px; padding:.5rem .85rem; cursor:pointer; font-weight:600; }
+      .profile-menu { position:absolute; right:0; top:calc(100% + .4rem); width:min(260px,90vw); border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow); padding:.45rem; z-index:20; }
+      .profile-item { width:100%; border:0; border-radius:10px; padding:.6rem .7rem; text-align:left; background:transparent; color:var(--text); cursor:pointer; }
+      .profile-item.active { background:color-mix(in oklab,var(--primary) 18%,var(--surface)); color:var(--primary-2); font-weight:700; }
+      .picker { margin-bottom:.95rem; }
+      .picker-title { font-size:.85rem; color:var(--muted); margin:0 0 .42rem; }
+      .scroll-row { display:flex; gap:.45rem; overflow-x:auto; padding-bottom:.25rem; }
+      .btn { border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:12px; padding:.5rem .75rem; white-space:nowrap; cursor:pointer; font-size:.9rem; }
+      .btn.active { background:color-mix(in oklab,var(--primary) 18%,var(--surface)); border-color:color-mix(in oklab,var(--primary) 50%,var(--border)); color:var(--primary-2); font-weight:700; }
+      .day-btn { width:62px; min-width:62px; height:72px; border:1px solid var(--border); background:var(--surface-2); border-radius:12px; cursor:pointer; display:grid; place-items:center; padding:.2rem; }
+      html[data-theme='dark'] .day-btn { border-color: color-mix(in oklab,var(--text) 12%,var(--border)); }
+      .day-btn .abbr { font-size:.74rem; text-transform:uppercase; color:var(--muted); line-height:1; }
+      .day-btn .num { font-size:1.55rem; line-height:1; font-weight:800; color:var(--text); }
+      .day-btn.active { background:color-mix(in oklab,var(--primary) 20%,var(--surface)); border-color:color-mix(in oklab,var(--primary) 55%,var(--border)); }
+      .day-btn.active .abbr,.day-btn.active .num { color:var(--primary-2); }
+      .meta { margin:.35rem 0 .75rem; color:var(--muted); }
+      .chip { display:inline-block; background:color-mix(in oklab,var(--primary) 18%,var(--surface)); color:var(--primary-2); border:1px solid color-mix(in oklab,var(--primary) 35%,var(--border)); border-radius:999px; padding:.25rem .65rem; font-size:.8rem; margin-bottom:.6rem; }
+      .error { border:1px solid color-mix(in oklab,var(--danger) 35%,transparent); background:color-mix(in oklab,var(--danger) 12%,var(--surface)); color:var(--danger); border-radius:10px; padding:.65rem .75rem; margin-bottom:.8rem; }
+      .meals-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:.8rem; }
+      .meal { grid-column:span 6; border:1px solid var(--border); background:var(--surface-2); border-radius:14px; padding:.9rem; }
+      .meal.condimenti { grid-column:span 12; }
+      .meal h3 { margin:0 0 .55rem; color:var(--primary-2); }
+      .meal ul { margin:0; padding-left:1.1rem; }
+      .meal li { margin:.32rem 0; }
 
-      .container { width: min(1140px, 100% - 1rem); margin: 1rem auto; }
-      .shell {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: clamp(1rem, 2vw, 1.4rem);
-        box-shadow: var(--shadow);
-      }
+      .shopping-section { margin-top:1rem; border:1px solid var(--border); background:var(--surface-2); border-radius:14px; padding:.9rem; }
+      .shopping-header { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+      .shopping-header h3 { margin:0; color:var(--primary-2); }
+      .small-btn { border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:8px; padding:.35rem .55rem; cursor:pointer; }
+      .shopping-form { display:grid; gap:.4rem; margin-top:.55rem; }
+      .shopping-form input { border:1px solid var(--border); border-radius:8px; padding:.45rem .55rem; background:var(--surface); color:var(--text); }
+      .shopping-list { margin-top:.65rem; display:grid; gap:.45rem; }
+      .shop-item { border:1px solid var(--border); border-radius:10px; padding:.45rem; display:grid; grid-template-columns:auto 1fr auto; gap:.4rem; align-items:center; }
+      .shop-item.done { opacity:.55; }
+      .shop-main.done-text { text-decoration:line-through; }
+      .shop-actions { display:flex; gap:.25rem; }
 
-      .topbar {
-        display: flex;
-        align-items: start;
-        justify-content: space-between;
-        gap: .8rem;
-        flex-wrap: wrap;
-        margin-bottom: 1rem;
-      }
-
-      .top-actions { display: flex; gap: .55rem; align-items: center; position: relative; }
-      .subtitle { margin: .3rem 0 0; color: var(--muted); font-size: .95rem; }
-      h1 { margin: 0; font-size: clamp(1.22rem, 3vw, 1.85rem); }
-
-      .icon-btn, .theme-toggle {
-        border: 1px solid var(--border);
-        background: var(--surface-2);
-        color: var(--text);
-        border-radius: 999px;
-        padding: .5rem .85rem;
-        cursor: pointer;
-        font-weight: 600;
-      }
-
-      .profile-menu {
-        position: absolute;
-        right: 0;
-        top: calc(100% + .4rem);
-        width: min(260px, 90vw);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--surface);
-        box-shadow: var(--shadow);
-        padding: .45rem;
-        z-index: 20;
-      }
-      .profile-item {
-        width: 100%;
-        border: 0;
-        border-radius: 10px;
-        padding: .6rem .7rem;
-        text-align: left;
-        background: transparent;
-        color: var(--text);
-        cursor: pointer;
-      }
-      .profile-item.active {
-        background: color-mix(in oklab, var(--primary) 18%, var(--surface));
-        color: var(--primary-2);
-        font-weight: 700;
-      }
-
-      .picker { margin-bottom: .95rem; }
-      .picker-title { font-size: .85rem; color: var(--muted); margin: 0 0 .42rem; }
-      .scroll-row { display: flex; gap: .45rem; overflow-x: auto; padding-bottom: .25rem; }
-
-      .btn {
-        border: 1px solid var(--border);
-        background: var(--surface-2);
-        color: var(--text);
-        border-radius: 12px;
-        padding: .5rem .75rem;
-        white-space: nowrap;
-        cursor: pointer;
-        font-size: .9rem;
-      }
-      .btn.active {
-        background: color-mix(in oklab, var(--primary) 18%, var(--surface));
-        border-color: color-mix(in oklab, var(--primary) 50%, var(--border));
-        color: var(--primary-2);
-        font-weight: 700;
-      }
-
-      .day-btn {
-        width: 62px;
-        min-width: 62px;
-        height: 72px;
-        border: 1px solid var(--border);
-        background: var(--surface-2);
-        border-radius: 12px;
-        cursor: pointer;
-        display: grid;
-        place-items: center;
-        padding: .2rem;
-      }
-      html[data-theme='dark'] .day-btn { border-color: color-mix(in oklab, var(--text) 12%, var(--border)); }
-      .day-btn .abbr { font-size: .74rem; text-transform: uppercase; color: var(--muted); line-height: 1; }
-      .day-btn .num { font-size: 1.55rem; line-height: 1; font-weight: 800; color: var(--text); }
-      .day-btn.active {
-        background: color-mix(in oklab, var(--primary) 20%, var(--surface));
-        border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
-      }
-      .day-btn.active .abbr, .day-btn.active .num { color: var(--primary-2); }
-
-      .meta { margin: .35rem 0 .75rem; color: var(--muted); }
-      .chip {
-        display: inline-block;
-        background: color-mix(in oklab, var(--primary) 18%, var(--surface));
-        color: var(--primary-2);
-        border: 1px solid color-mix(in oklab, var(--primary) 35%, var(--border));
-        border-radius: 999px;
-        padding: .25rem .65rem;
-        font-size: .8rem;
-        margin-bottom: .6rem;
-      }
-
-      .error {
-        border: 1px solid color-mix(in oklab, var(--danger) 35%, transparent);
-        background: color-mix(in oklab, var(--danger) 12%, var(--surface));
-        color: var(--danger);
-        border-radius: 10px;
-        padding: .65rem .75rem;
-        margin-bottom: .8rem;
-      }
-
-      .content-grid { display: grid; grid-template-columns: 1fr 340px; gap: .85rem; }
-      .meals-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: .8rem; }
-      .meal {
-        grid-column: span 6;
-        border: 1px solid var(--border);
-        background: var(--surface-2);
-        border-radius: 14px;
-        padding: .9rem;
-      }
-      .meal.condimenti { grid-column: span 12; }
-      .meal h3 { margin: 0 0 .55rem; color: var(--primary-2); }
-      .meal ul { margin: 0; padding-left: 1.1rem; }
-      .meal li { margin: .32rem 0; }
-
-      .shopping {
-        border: 1px solid var(--border);
-        background: var(--surface-2);
-        border-radius: 14px;
-        padding: .9rem;
-      }
-      .shopping-header { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-      .shopping h3 { margin: 0; color: var(--primary-2); }
-      .small-btn {
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text);
-        border-radius: 8px;
-        padding: .35rem .55rem;
-        cursor: pointer;
-      }
-      .shopping-form { display: grid; gap: .4rem; margin-top: .55rem; }
-      .shopping-form input {
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: .45rem .55rem;
-        background: var(--surface);
-        color: var(--text);
-      }
-      .shopping-list { margin-top: .65rem; display: grid; gap: .45rem; }
-      .shop-item {
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: .45rem;
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: .4rem;
-        align-items: center;
-      }
-      .shop-item.done { opacity: .55; }
-      .shop-main.done-text { text-decoration: line-through; }
-      .shop-actions { display: flex; gap: .25rem; }
-
-      @media (max-width: 980px) {
-        .content-grid { grid-template-columns: 1fr; }
-      }
-      @media (max-width: 700px) {
-        .meal, .meal.condimenti { grid-column: span 12; }
-        .theme-toggle { width: 100%; }
-      }
+      @media (max-width:700px){ .meal,.meal.condimenti{grid-column:span 12;} .theme-toggle{width:100%;} }
     </style>
   </head>
   <body>
@@ -233,6 +86,7 @@
             <p class="subtitle">Hub familiare: piani alimentari e lista spesa</p>
           </div>
           <div class="top-actions">
+            <button id="shoppingToggle" class="shopping-toggle" type="button">🛒 Lista Spesa</button>
             <button id="profileToggle" class="icon-btn" type="button">👤 <span id="profileName">Profilo</span></button>
             <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambia tema">🌙 Modalità notte</button>
             <div id="profileMenu" class="profile-menu" hidden></div>
@@ -252,29 +106,23 @@
         <p id="patientMeta" class="meta">Caricamento dati...</p>
         <span class="chip" id="dayChip">Giorno selezionato</span>
         <div id="error" class="error" hidden></div>
+        <div class="meals-grid" id="meals"></div>
 
-        <div class="content-grid">
-          <div class="meals-grid" id="meals"></div>
-
-          <aside class="shopping">
-            <div class="shopping-header">
-              <h3>Lista della Spesa</h3>
-              <button id="addShoppingBtn" class="small-btn" type="button">+ Aggiungi</button>
-            </div>
-
-            <form id="shoppingForm" class="shopping-form" hidden>
-              <input id="shopName" placeholder="Nome articolo" required />
-              <input id="shopQty" placeholder="Quantità (es. 200g)" required />
-              <input id="shopCategory" placeholder="Categoria (es. Verdure)" />
-              <button class="small-btn" type="submit">Salva</button>
-            </form>
-
-            <div id="shoppingList" class="shopping-list"></div>
-          </aside>
-        </div>
+        <section id="shoppingSection" class="shopping-section" hidden>
+          <div class="shopping-header">
+            <h3>Lista della Spesa</h3>
+            <button id="addShoppingBtn" class="small-btn" type="button">+ Aggiungi</button>
+          </div>
+          <form id="shoppingForm" class="shopping-form" hidden>
+            <input id="shopName" placeholder="Nome articolo" required />
+            <input id="shopQty" placeholder="Quantità (es. 200g)" required />
+            <input id="shopCategory" placeholder="Categoria (es. Verdure)" />
+            <button class="small-btn" type="submit">Salva</button>
+          </form>
+          <div id="shoppingList" class="shopping-list"></div>
+        </section>
       </section>
     </main>
-
     <script src="app.js"></script>
   </body>
 </html>

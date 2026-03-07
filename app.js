@@ -8,6 +8,8 @@ const themeToggle = document.getElementById('themeToggle');
 const profileToggle = document.getElementById('profileToggle');
 const profileName = document.getElementById('profileName');
 const profileMenu = document.getElementById('profileMenu');
+const shoppingToggle = document.getElementById('shoppingToggle');
+const shoppingSection = document.getElementById('shoppingSection');
 const shoppingList = document.getElementById('shoppingList');
 const addShoppingBtn = document.getElementById('addShoppingBtn');
 const shoppingForm = document.getElementById('shoppingForm');
@@ -36,8 +38,7 @@ function dayLabel(dayNumber) {
 
 function setProfileColor() {
   const name = plans[selectedPatientIndex]?.paziente?.nome;
-  const color = PROFILE_COLORS[name] || '#3b82f6';
-  document.documentElement.style.setProperty('--primary', color);
+  document.documentElement.style.setProperty('--primary', PROFILE_COLORS[name] || '#3b82f6');
 }
 
 function setTheme(theme) {
@@ -47,18 +48,20 @@ function setTheme(theme) {
 }
 
 function initTheme() {
-  const storedTheme = localStorage.getItem(THEME_KEY);
-  if (storedTheme === 'dark' || storedTheme === 'light') {
-    setTheme(storedTheme);
-    return;
-  }
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  setTheme(prefersDark ? 'dark' : 'light');
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored === 'dark' || stored === 'light') return setTheme(stored);
+  setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 }
 
 themeToggle.addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme') || 'light';
   setTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+shoppingToggle.addEventListener('click', () => {
+  shoppingSection.hidden = !shoppingSection.hidden;
+  shoppingToggle.textContent = shoppingSection.hidden ? '🛒 Lista Spesa' : '🛒 Chiudi Spesa';
+  if (!shoppingSection.hidden) renderShoppingList();
 });
 
 function showError(message) {
@@ -68,6 +71,35 @@ function showError(message) {
 function clearError() {
   errorBox.hidden = true;
   errorBox.textContent = '';
+}
+
+function parseQty(qty) {
+  const m = String(qty || '').trim().match(/^([0-9]+(?:[.,][0-9]+)?)\s*([a-zA-Z]+)$/);
+  if (!m) return null;
+  return { num: Number(m[1].replace(',', '.')), unit: m[2].toLowerCase() };
+}
+
+function mergeQty(a, b) {
+  const qa = parseQty(a);
+  const qb = parseQty(b);
+  if (qa && qb && qa.unit === qb.unit) return `${(qa.num + qb.num).toFixed(2).replace('.00', '').replace('.', ',')}${qa.unit}`;
+  const parts = [...new Set([a, b].map((x) => String(x).trim()).filter(Boolean))];
+  return parts.join(' + ');
+}
+
+function aggregateItems(items) {
+  const map = new Map();
+  items.forEach((item) => {
+    const key = `${item.nome}`.trim().toLowerCase();
+    if (!map.has(key)) {
+      map.set(key, { ...item, id: crypto.randomUUID(), done: false });
+      return;
+    }
+    const current = map.get(key);
+    current.quantita = mergeQty(current.quantita, item.quantita);
+    current.categoria = current.categoria || item.categoria;
+  });
+  return [...map.values()];
 }
 
 function mealSection(title, items, extraClass = '') {
@@ -95,12 +127,12 @@ function currentShopKey() {
 
 function defaultShoppingItems() {
   const program = plans[selectedPatientIndex].programma.filter((d) => (selectedWeek === 1 ? d.giorno <= 7 : d.giorno >= 8));
-  const items = [];
+  const raw = [];
   program.forEach((d) => {
-    Object.values(d.pasti).flat().forEach((p) => items.push({ id: crypto.randomUUID(), nome: p.alimento, quantita: p.quantita, categoria: 'Pasto', done: false }));
-    Object.entries(d.condimenti || {}).forEach(([k, v]) => items.push({ id: crypto.randomUUID(), nome: k, quantita: v, categoria: 'Condimenti', done: false }));
+    Object.values(d.pasti).flat().forEach((p) => raw.push({ nome: p.alimento, quantita: p.quantita, categoria: 'Pasto' }));
+    Object.entries(d.condimenti || {}).forEach(([k, v]) => raw.push({ nome: k, quantita: v, categoria: 'Condimenti' }));
   });
-  return items.slice(0, 18);
+  return aggregateItems(raw);
 }
 
 function ensureShoppingState() {
@@ -135,17 +167,16 @@ function renderShoppingList() {
 
     const actions = document.createElement('div');
     actions.className = 'shop-actions';
-
     const edit = document.createElement('button');
     edit.className = 'small-btn';
     edit.textContent = '✏️';
     edit.addEventListener('click', () => {
       const nome = prompt('Nome articolo', item.nome);
       if (!nome) return;
-      const quantita = prompt('Quantità', item.quantita) || item.quantita;
       item.nome = nome;
-      item.quantita = quantita;
+      item.quantita = prompt('Quantità', item.quantita) || item.quantita;
       localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
+      shoppingState[currentShopKey()] = aggregateItems(shoppingState[currentShopKey()]);
       renderShoppingList();
     });
 
@@ -165,47 +196,39 @@ function renderShoppingList() {
   });
 }
 
+function upsertShoppingItem(newItem) {
+  const key = currentShopKey();
+  ensureShoppingState();
+  shoppingState[key].push({ ...newItem, id: crypto.randomUUID(), done: false });
+  shoppingState[key] = aggregateItems(shoppingState[key]);
+  localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
+}
+
 addShoppingBtn.addEventListener('click', () => {
   shoppingForm.hidden = !shoppingForm.hidden;
 });
 
 shoppingForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const key = currentShopKey();
-  ensureShoppingState();
-  shoppingState[key].unshift({
-    id: crypto.randomUUID(),
-    nome: shopName.value.trim(),
-    quantita: shopQty.value.trim(),
-    categoria: shopCategory.value.trim() || 'Generale',
-    done: false
-  });
-  localStorage.setItem(SHOPPING_KEY, JSON.stringify(shoppingState));
+  upsertShoppingItem({ nome: shopName.value.trim(), quantita: shopQty.value.trim(), categoria: shopCategory.value.trim() || 'Generale' });
   shoppingForm.reset();
   shoppingForm.hidden = true;
   renderShoppingList();
 });
 
 function renderProfileMenu() {
-  profileMenu.innerHTML = plans
-    .map((plan, idx) => `<button type="button" class="profile-item ${idx === selectedPatientIndex ? 'active' : ''}" data-profile="${idx}">${plan.paziente.nome}</button>`)
-    .join('');
-
-  profileMenu.querySelectorAll('[data-profile]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      profileMenu.hidden = true;
-      selectPatient(Number(btn.dataset.profile), true);
-    });
-  });
+  profileMenu.innerHTML = plans.map((plan, idx) => `<button type="button" class="profile-item ${idx === selectedPatientIndex ? 'active' : ''}" data-profile="${idx}">${plan.paziente.nome}</button>`).join('');
+  profileMenu.querySelectorAll('[data-profile]').forEach((btn) => btn.addEventListener('click', () => {
+    profileMenu.hidden = true;
+    selectPatient(Number(btn.dataset.profile), true);
+  }));
 }
 
 profileToggle.addEventListener('click', () => {
   profileMenu.hidden = !profileMenu.hidden;
 });
 document.addEventListener('click', (e) => {
-  if (!profileMenu.hidden && !profileMenu.contains(e.target) && !profileToggle.contains(e.target)) {
-    profileMenu.hidden = true;
-  }
+  if (!profileMenu.hidden && !profileMenu.contains(e.target) && !profileToggle.contains(e.target)) profileMenu.hidden = true;
 });
 
 function renderWeekButtons() {
@@ -215,13 +238,10 @@ function renderWeekButtons() {
 
 function renderDayButtons(program) {
   const filtered = program.filter((d) => (selectedWeek === 1 ? d.giorno <= 7 : d.giorno >= 8));
-  dayButtons.innerHTML = filtered
-    .map((day) => {
-      const abbr = WEEKDAY_NAMES[(day.giorno - 1) % 7];
-      return `<button type="button" class="day-btn ${day.giorno === selectedDay ? 'active' : ''}" data-day="${day.giorno}"><span class="abbr">${abbr}</span><span class="num">${day.giorno}</span></button>`;
-    })
-    .join('');
-
+  dayButtons.innerHTML = filtered.map((day) => {
+    const abbr = WEEKDAY_NAMES[(day.giorno - 1) % 7];
+    return `<button type="button" class="day-btn ${day.giorno === selectedDay ? 'active' : ''}" data-day="${day.giorno}"><span class="abbr">${abbr}</span><span class="num">${day.giorno}</span></button>`;
+  }).join('');
   dayButtons.querySelectorAll('[data-day]').forEach((btn) => btn.addEventListener('click', () => selectDay(Number(btn.dataset.day), true)));
 }
 
@@ -237,28 +257,18 @@ function syncPickers() {
 function renderDay() {
   clearError();
   const selected = plans[selectedPatientIndex];
-  if (!selected) {
-    showError('Paziente non trovato.');
-    return;
-  }
+  if (!selected) return showError('Paziente non trovato.');
 
   const dayPlan = selected.programma.find((d) => d.giorno === selectedDay);
-  if (!dayPlan) {
-    showError('Giorno non trovato nel programma.');
-    return;
-  }
+  if (!dayPlan) return showError('Giorno non trovato nel programma.');
 
   patientMeta.textContent = `${selected.paziente.nome} · ${selected.paziente.indirizzo} · ${selected.paziente.medico} · Visita: ${selected.paziente.data_visita}`;
   dayChip.textContent = dayLabel(dayPlan.giorno);
 
   mealsContainer.innerHTML = '';
-  [['colazione', 'Colazione'], ['spuntino_mattina', 'Spuntino mattina'], ['pranzo', 'Pranzo'], ['spuntino_pomeriggio', 'Spuntino pomeriggio'], ['cena', 'Cena']].forEach(([key, label]) => {
-    mealsContainer.appendChild(mealSection(label, dayPlan.pasti[key] || []));
-  });
-
-  const condimentiItems = Object.entries(dayPlan.condimenti || {}).map(([alimento, quantita]) => ({ alimento, quantita }));
-  mealsContainer.appendChild(mealSection('Condimenti', condimentiItems, 'condimenti'));
-  renderShoppingList();
+  [['colazione', 'Colazione'], ['spuntino_mattina', 'Spuntino mattina'], ['pranzo', 'Pranzo'], ['spuntino_pomeriggio', 'Spuntino pomeriggio'], ['cena', 'Cena']].forEach(([key, label]) => mealsContainer.appendChild(mealSection(label, dayPlan.pasti[key] || [])));
+  mealsContainer.appendChild(mealSection('Condimenti', Object.entries(dayPlan.condimenti || {}).map(([alimento, quantita]) => ({ alimento, quantita })), 'condimenti'));
+  if (!shoppingSection.hidden) renderShoppingList();
 }
 
 function currentWeekdayAsPlanDay(week = 1) {
@@ -271,14 +281,11 @@ function selectPatient(index, save = false) {
   selectedPatientIndex = index;
   const profileId = plans[selectedPatientIndex].paziente.nome;
   const state = profileState[profileId];
-  if (state) {
-    selectedWeek = state.week;
-    selectedDay = state.day;
-  } else {
+  if (state) { selectedWeek = state.week; selectedDay = state.day; }
+  else {
     selectedWeek = currentWeekdayAsPlanDay() <= 7 ? 1 : 2;
     selectedDay = currentWeekdayAsPlanDay(selectedWeek);
   }
-
   syncPickers();
   renderDay();
   if (save) saveProfileState();
@@ -303,14 +310,12 @@ function selectDay(day, save = false) {
 
 function initUI() {
   loadStates();
-  const initialDay = currentWeekdayAsPlanDay(1);
   selectedWeek = 1;
-  selectedDay = initialDay;
+  selectedDay = currentWeekdayAsPlanDay(1);
   selectPatient(0, false);
 }
 
 initTheme();
-
 fetch('data/piani_alimentari.json')
   .then((res) => {
     if (!res.ok) throw new Error(`Errore HTTP ${res.status}`);
