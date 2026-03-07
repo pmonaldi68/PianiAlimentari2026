@@ -349,16 +349,21 @@ function currentWeekdayAsPlanDay(week = 1) {
   return week === 1 ? mondayBased : mondayBased + 7;
 }
 
-function selectPatient(index, save = false) {
+function selectPatient(index, save = false, forceToday = false) {
   selectedPatientIndex = index;
   const profileId = plans[selectedPatientIndex].paziente.nome;
   const state = profileState[profileId];
-  if (state) {
+  const today = currentWeekdayAsPlanDay(1);
+
+  if (forceToday) {
+    selectedWeek = 1;
+    selectedDay = today;
+  } else if (state) {
     selectedWeek = state.week;
     selectedDay = state.day;
   } else {
-    selectedWeek = currentWeekdayAsPlanDay() <= 7 ? 1 : 2;
-    selectedDay = currentWeekdayAsPlanDay(selectedWeek);
+    selectedWeek = 1;
+    selectedDay = today;
   }
   syncPickers();
   renderDay();
@@ -386,7 +391,7 @@ function initUI() {
   loadStates();
   selectedWeek = 1;
   selectedDay = currentWeekdayAsPlanDay(1);
-  selectPatient(0, false);
+  selectPatient(0, false, true);
 }
 
 initTheme();

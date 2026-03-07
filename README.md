@@ -20,6 +20,7 @@ Poi apri `http://localhost:8000`.
 - Selezione settimana e giorni con pulsanti compatti.
 - Pulsanti giorno quadrati: abbreviazione sopra (`lun`) e numero grande sotto (`1`).
 - Etichetta completa giorno nel formato `Giorno X - NomeGiorno`.
+- All'apertura dell'app, selezione automatica del giorno corrente della settimana.
 - Condivisione del giorno corrente su WhatsApp con riepilogo e icone cibo.
 - Stato indipendente per ogni profilo (settimana/giorno).
 
