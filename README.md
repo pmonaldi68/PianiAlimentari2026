@@ -20,6 +20,7 @@ Apri `http://localhost:8000`.
 
 - Cambio profilo rapido (Paolo/Daniela) con tema colore dinamico.
 - Avvio sempre sul giorno corrente della settimana (data odierna).
+- Quando selezioni un giorno, l'app apre direttamente la sezione pasti (Piano).
 - Tema chiaro/scuro con persistenza locale.
 - Condivisione WhatsApp del giorno con icone cibo.
 - Persistenza locale separata per profilo/settimana (`localStorage`).

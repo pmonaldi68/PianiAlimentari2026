@@ -289,7 +289,7 @@ function applyProfileVisuals() {
   const name = plans[selectedPatientIndex].paziente.nome;
   const color = PROFILE_COLORS[name] || '#4cae4f';
   document.documentElement.style.setProperty('--primary', color);
-  profileNameWelcome.textContent = `Welcome back, ${name.split(' ')[0]}`;
+  profileNameWelcome.textContent = `Bentornato, ${name.split(' ')[0]}`;
   avatarPrimary.textContent = name[0];
   const other = plans.find((p, i) => i !== selectedPatientIndex)?.paziente?.nome || 'X';
   avatarSecondary.textContent = other[0];
@@ -339,6 +339,7 @@ function selectDay(day, save = false) {
   selectedDay = day;
   selectedWeek = day <= 7 ? 1 : 2;
   renderAll();
+  switchTab('planner');
   if (save) saveProfileState();
 }
 
